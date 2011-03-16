@@ -1,0 +1,818 @@
+#LyX 2.0.0beta4 created this file. For more info see http://www.lyx.org/
+\lyxformat 412
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language spanish
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Índice
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.5cm
+\topmargin 2.5cm
+\rightmargin 2.5cm
+\bottommargin 2.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\listings_params "language=bash"
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Informe práctica 1
+\begin_inset Newline newline
+\end_inset
+
+Usuarios y protección en GNU/Linux
+\end_layout
+
+\begin_layout Author
+Alejandro Samarín Pérez - alu3862
+\begin_inset Newline newline
+\end_inset
+
+José Lucas Grillo Lorenzo - alu3181
+\end_layout
+
+\begin_layout Abstract
+El objetivo de la práctica consiste en la utilización de los mecanismos
+ que implementa Linux para la gestión de usuarios y grupos en un sistema
+ de estas características.
+ Además se pretende familiarizar a los administradores con los mecanismos
+ de protección habilitados en este sistema operativo.
+ Para ello, se plantea un caso práctico de una organización que utiliza
+ un sistema Linux como soporte informático.
+\end_layout
+
+\begin_layout Standard
+Se pretende crear una serie de grupos y usuarios pertenecientes a los mismos
+ que se relacionan con los recursos del sistema mediante la instauración
+ de diversos permisos y restricciones.
+ La realización de la práctica se llevó a cabo de manera automatizada utilizando
+ scripting bash.
+\end_layout
+
+\begin_layout Part
+Creación de los usuarios
+\end_layout
+
+\begin_layout Standard
+A continuación se listan los requerimientos referentes a las contraseñas:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Los usuarios deben cambiar sus contraseñas cada 3 meses
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Es necesario notificar a los usuarios 1 día antes de que su contraseña caduque.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Transcurridos 2 días desde la caducidad del password, la cuenta ha de quedar
+ desactivada.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+En la práctica, la contraseña de cada usuario coincidirá con el nombre de
+ usuario
+\end_layout
+
+\begin_layout Standard
+En cuanto a los requisitos de los directorios de conexión de los usuarios
+ y sus permisos asociados:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Todo usuario del sistema debe poseer un subdirectorio del directorio /home
+ cuyo nombre debe coincidir con el de la cuenta del usuario.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+En este directorio, el usuario debe poder crear y borrar ficheros y directorios,
+ pero no debe poder modificar los permisos de su directorio de conexión.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Ningún otro usuario del sistema podrá acceder a dicho directorio ni a su
+ contenido.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Cada usuario tendrá una cuota de disco de 50 Mb que podrá sobrepasar temporalmen
+te (2 días).
+\end_layout
+
+\begin_layout Standard
+Se ha implementado una función 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+create_user
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\emph default
+para la creación de las cuentas de usuario y asignación de contraseñas.
+ Para los puntos 1, 2 y 3 anteriores, se resolvió utilizando la siguiente
+ invocación del comando 
+\emph on
+chage
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	chage -M 90 -W 1 -I 2 <usuario>
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+El parámetro 
+\begin_inset Quotes eld
+\end_inset
+
+-M 90
+\begin_inset Quotes erd
+\end_inset
+
+ indica el período máximo en días antes del cual los usuarios deben cambiar
+ su contraseña (90 días).
+ El parámetro 
+\begin_inset Quotes eld
+\end_inset
+
+-W 1
+\begin_inset Quotes erd
+\end_inset
+
+ significa que se avisará al usuario 1 día antes de que caduque la contraseña.
+ Por último, el parámetro 
+\begin_inset Quotes eld
+\end_inset
+
+-I 2
+\begin_inset Quotes erd
+\end_inset
+
+ desactivará la cuenta del usuario si no ha cambiado aún su contraseña tras
+ 2 días desde su caducidad (período de gracia).
+\end_layout
+
+\begin_layout Standard
+El punto 4 se ha resuelto mediante el comando 
+\emph on
+chpasswd
+\emph default
+, que permite cambiar la contraseña de forma automatizada a diferencia del
+ comando 
+\emph on
+passwd
+\emph default
+.
+ Se utiliza tal que así:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	echo <usuario>:<usuario> | chpasswd
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Es decir, se le aplica como contraseña el propio nombre de usuario y se
+ redirecciona al comando 
+\emph on
+chpasswd
+\emph default
+ que se encarga de establecerla al usuario especificado en el primer campo
+ (antes del ':')
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La creación de los usuarios se realiza invocando al comando 
+\emph on
+useradd
+\emph default
+.
+ Para satisfacer la condición de que cada usuario debe poseer un directorio
+ dedicado en /home, se le añaden los siguientes paŕametros:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	useradd -m -d /home/<usuario> -U -s /bin/bash -G <grupos> <usuario>
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para establecer el directorio de conexión, se utilizan conjuntamente las
+ opciones 
+\begin_inset Quotes eld
+\end_inset
+
+-m
+\begin_inset Quotes erd
+\end_inset
+
+, para crearlo si no existe, y 
+\begin_inset Quotes eld
+\end_inset
+
+-d
+\begin_inset Quotes erd
+\end_inset
+
+ para asociarlo al usuario.
+ La opción 
+\begin_inset Quotes eld
+\end_inset
+
+-U
+\begin_inset Quotes erd
+\end_inset
+
+ establece como grupo principal del usuario uno exclusivo con su mismo nombre,
+ siguiendo las recomendaciones y estrategias de muchas distribuciones públicas
+ de Linux (entre ellas Red Hat).
+ A continuación, se especifica la shell que utilizará el nuevo usuario con
+ el parámetro 
+\begin_inset Quotes eld
+\end_inset
+
+-s
+\begin_inset Quotes erd
+\end_inset
+
+, en este caso una bash estándar.
+ Los grupos suplementarios vendrán establecidos por los proyectos a los
+ que el usuario esté asignado, que habrán sido creados previamente, como
+ se detallará...
+\end_layout
+
+\begin_layout Standard
+La estrategia que se ha seguido para garantizar que el usuario tenga total
+ libertad para crear, borrar y modificar ficheros en su propio home, pero
+ sin poder modificar los permisos del mismo, es: 
+\end_layout
+
+\begin_layout Itemize
+Establecer como usuario propietario del directorio a root, ya que es solamente
+ el usuario propietario quien puede modificar los permisos del directorio.
+\end_layout
+
+\begin_layout Itemize
+Establecer como grupo propietario al grupo propio del usuario (razón para
+ indicar la opción 
+\begin_inset Quotes eld
+\end_inset
+
+-U
+\begin_inset Quotes erd
+\end_inset
+
+ explicada anteriormente), para que así tenga acceso a su directorio de
+ conexión.
+ Esto se realiza por defecto al crear el directorio.
+\end_layout
+
+\begin_layout Itemize
+El resto de usuarios no tendrá ningún permiso sobre dicho directorio.
+\end_layout
+
+\begin_layout Standard
+Para llevar esto a cabo se han usado los siguiente comandos:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	chown root /home/<usuario>
+\end_layout
+
+\begin_layout Plain Layout
+
+	chmod 770 /home/<usuario> 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Con el 
+\emph on
+chmod
+\emph default
+ 
+\emph on
+770 
+\emph default
+aseguramos que el usuario tenga completo acceso a su directorio de conexión,
+ a la vez que restringimos el acceso al resto de usuarios.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En cuanto al punto 4 de los requisitos referente a las cuotas de usuario,
+ se ha utilizado una variante automatizada del comando 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+edquota
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+, denominada 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+setquota
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+.
+ Esta nos permite establecer las cuotas para el directorio de conexión del
+ usuario, una vez estén configuradas en el sistema.
+ La invocación del mismo es como sigue:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	setquota <usuario> 50000 60000 0 0 -a 
+\end_layout
+
+\begin_layout Plain Layout
+
+	setquota <usuario> -T 2 0 -a 2&>/dev/null
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En el primer caso se establecen los soft y hard limit de la cuota a 50MB
+ y 60MB respectivamente, sin límite de inodos (número de ficheros permitidos
+ creados por el usuario).
+ En la segunda línea, indicamos el tiempo de gracia de 2 días para la eventual
+ superación del soft limit de bloques.
+ Ambas restricciones se aplican a todos los sistemas de ficheros con cuotas
+ para ese usuario (en este caso, sólo se trata de 
+\emph on
+/home
+\emph default
+), y además en el segundo caso se redirecciona la salida de errores a 
+\emph on
+/dev/null
+\emph default
+ para eliminar mensajes de aviso relacionados con no haber superado aún
+ el límite blando establecido en ese momento.
+\end_layout
+
+\begin_layout Standard
+A propósito de las cuotas, se ha comentado brevemente que es necesario configura
+rlas en el sistema de ficheros destino previamente a su aplicación.
+ Para ello, se debe modificar el fichero 
+\emph on
+/etc/fstab 
+\emph default
+para indicar qué particiones del sistema implementarán las cuotas, en nuestro
+ caso 
+\emph on
+/home
+\emph default
+.
+ Esto se ha automatizado mediante el uso de la herramienta estándar 
+\emph on
+sed 
+\emph default
+en combinación con la siguiente expresión regular:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	sed -r 's/^
+\backslash
+s*[^#]
+\backslash
+S*
+\backslash
+s+
+\backslash
+/home
+\backslash
+s+
+\backslash
+S+
+\backslash
+s+
+\backslash
+S+/ 
+\end_layout
+
+\begin_layout Plain Layout
+
+			&,usrjquota=aquota.user,jqfmt=vfsv0/' -i.bkp1 /etc/fstab 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aprovechando esta sección del script que se encarga de modificar convenientement
+e el 
+\emph on
+/etc/fstab 
+\emph default
+(función 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+set_fstab
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+), se ha incluido a continuación del código anterior otra invocación a 
+\emph on
+sed
+\emph default
+
+\begin_inset space ~
+\end_inset
+
+para, mediante otra expresión regular, incluir asimismo el soporte para
+ ACL's en el mismo sistema de ficheros 
+\emph on
+/home
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	sed -r 's/^
+\backslash
+s*[^#]
+\backslash
+S*
+\backslash
+s+
+\backslash
+/home
+\backslash
+s+
+\backslash
+S+
+\backslash
+s+
+\backslash
+S+/&,acl/' -i.bkp2 /etc/fstab
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Después de haber modificado el 
+\emph on
+/etc/fstab
+\emph default
+, es necesario activar las cuotas para finalizar la implementación:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	umount /home       
+\end_layout
+
+\begin_layout Plain Layout
+
+	fsck /home
+\end_layout
+
+\begin_layout Plain Layout
+
+    mount /home
+\end_layout
+
+\begin_layout Plain Layout
+
+    quotacheck -vnm /home       
+\end_layout
+
+\begin_layout Plain Layout
+
+	quotaon -av 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En primer lugar, se desmonta 
+\emph on
+/home; 
+\emph default
+a continuación se realiza una comprobación de seguridad del sistema de ficheros
+ ya que se pudo comprobar que en ciertos casos el sistema de cuotas encontraba
+ algunas inconsistencias.
+ Tras ello, se remonta 
+\emph on
+/home
+\emph default
+ y se puede proceder ahora a activar las cuotas con 
+\emph on
+quotacheck 
+\emph default
+y 
+\emph on
+quotaon
+\emph default
+.
+\end_layout
+
+\begin_layout Part
+Proyectos
+\end_layout
+
+\begin_layout Standard
+Para cada proyecto se ha definido un grupo, esto es, los grupos 
+\begin_inset Quotes eld
+\end_inset
+
+aeropuerto
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+cc
+\begin_inset Quotes erd
+\end_inset
+
+ (centro comercial) y 
+\begin_inset Quotes eld
+\end_inset
+
+parque
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document
