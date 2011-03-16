@@ -734,12 +734,12 @@ begin{lstlisting}
 
 \begin_layout Plain Layout
 
-    mount /home
+	mount /home
 \end_layout
 
 \begin_layout Plain Layout
 
-    quotacheck -vnm /home       
+	quotacheck -vnm /home       
 \end_layout
 
 \begin_layout Plain Layout
@@ -787,6 +787,52 @@ Proyectos
 \end_layout
 
 \begin_layout Standard
+Los requisitos relacionados con la gestión de los proyectos se detallan
+ a continuación:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Cada proyecto debe tener un directorio bajo el directorio /home/proyectos
+ donde se almacenará la documentación asociada al mismo.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Todos los usuarios que participan en un proyecto deben tener la posibilidad
+ de leer, modificar, crear y borrar los archivos que forman parte del proyecto.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Cuando un usuario cree un archivo en el directorio del proyecto, por defecto,
+ éste debe poder ser leído, modificado o borrado por cualquier otro usuario
+ del mismo proyecto.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Ningún otro usuario podrá acceder a estos directorios.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Existirá un directorio /home/proyectos/comun donde se almacenará información
+ común a todos los proyectos de tal forma que todos los usuarios puedan
+ añadir y modificar información a este directorio, pero sólo el propietario
+ de cada carpeta pueda eliminarla.
+\end_layout
+
+\begin_layout Standard
 Para cada proyecto se ha definido un grupo, esto es, los grupos 
 \begin_inset Quotes eld
 \end_inset
@@ -812,6 +858,116 @@ parque
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+1.- mkdir
+\end_layout
+
+\begin_layout Standard
+2.- grupos + chmod ??70
+\end_layout
+
+\begin_layout Standard
+3.- bit setgid (para que al crear el archivo tenga el grupo del directorio)
+ y ACLs setfacl -d -m g:<grupo>:rw <dir>
+\end_layout
+
+\begin_layout Standard
+4.- chmod
+\end_layout
+
+\begin_layout Standard
+5.- chmod 1777 (bit sticky)
+\end_layout
+
+\begin_layout Part
+Ejecutivos
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Los ejecutivos asociados a un determinado proyecto podrán leer la información
+ de ese proyecto.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Los ejecutivos que no pertenezcan a un proyecto no deben poder acceder directame
+nte a los directorios de los proyectos.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Para que estos ejecutivos puedan controlar el estado de cada proyecto, deben
+ existir en el directorio /usr/local/bin tantos programas como proyectos
+ existan.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Estos programas internamente han de realizar un “ls” sobre el directorio
+ del proyecto correspondiente.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+El programa que permite evaluar cada proyecto, debe cumplir lo siguiente:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+
+\emph on
+Debe poder ser ejecutado únicamente por los ejecutivos de la organización.
+ 
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Debe tener asignado los permisos suficientes para poder ejecutar el “ls”
+ sobre el directorio correspondiente.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Comentar por que tenemos un grupo ejecutivos? porque facilita la ejecucion
+ de los programas por parte de los ejecutivos unicamente, asi como evita
+ tener que editar las ACL de dichos programas, si se hubiera llevado a cabo
+ de esa forma (con acls en vez de grupo), en el momento de crear nuevos
+ ejecutivos.
+\end_layout
+
+\begin_layout Standard
+1.- ACL
+\end_layout
+
+\begin_layout Standard
+2.- chmod ??0 /home/proyectos/aeropuerto...
+\end_layout
+
+\begin_layout Standard
+3.- programas
+\end_layout
+
+\begin_layout Standard
+4.- execl
+\end_layout
+
+\begin_layout Standard
+5.- a) chown root & chgrp ejecutivos
+\end_layout
+
+\begin_layout Standard
+b) bit setuid
 \end_layout
 
 \end_body
