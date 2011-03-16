@@ -185,10 +185,21 @@ create_user usu5 aeropuerto,cc,parque
 create_user usu6 parque
 # Notese que a los ejecutivos se les agrega al grupo destinado a tal fin, 
 # relacionado con el uso de los ejecutables 'ls<proyecto>'
-create_user ejec1 aeropuerto,parque,ejecutivos
-create_user ejec2 aeropuerto,cc,ejecutivos
+create_user ejec1 ejecutivos
+create_user ejec2 ejecutivos
+
+# Permisos de solo lectura para los ejecutivos, de forma que no puedan
+# modificar ni borrar archivos de los proyectos a los que pertenecen
+setfacl -d -m u:ejec1:rx /home/proyectos/aeropuerto
+setfacl -d -m u:ejec1:rx /home/proyectos/parque
+setfacl -d -m u:ejec2:rx /home/proyectos/aeropuerto
+setfacl -d -m u:ejec2:rx /home/proyectos/cc
 
 # PASO 6: Crear los ficheros ejecutables 'ls<proyecto>' para los ejecutivos
 create_ls aeropuerto
 create_ls cc
 create_ls parque
+
+# PASO 7: TODO expresion regular para cambiar limitaciones de horarios y tty's para usuarios
+# sed -r 's/^\s*[^#]account\s.*/account required pam_time.so\n&/' -i.bkp /etc/pam.d/login
+# echo "login;tty4;usu4;Wk0900-1500" >> /etc/security/time.conf
