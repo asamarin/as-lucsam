@@ -138,7 +138,7 @@ function set_pam {
    sed -r 's/(account\s+required.*)+/account    required     pam_time.so\n&/m' -i.bkp /etc/pam.d/login
 
    # Crear backup del fichero /etc/security/time.conf si no existia previamente
-   if [[ ! -x /etc/security/time.conf.bkp]]
+   if [[ ! -x /etc/security/time.conf.bkp ]]
    then
       cp /etc/security/time.conf /etc/security/time.conf.bkp
    fi
