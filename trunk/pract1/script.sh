@@ -212,9 +212,11 @@ setfacl -d -m u:ejec2:rx /home/proyectos/aeropuerto
 setfacl -d -m u:ejec2:rx /home/proyectos/cc
 
 # PASO 7: Crear los ficheros ejecutables 'ls<proyecto>' para los ejecutivos
+echo "[+] Creando programas para ejecutivos..."
 create_ls aeropuerto
 create_ls cc
 create_ls parque
 
 # PASO 8: [Opcional] Establecer las restricciones de acceso mediante PAM login
+echo "[+] Estableciendo restricciones PAM..."
 set_pam
