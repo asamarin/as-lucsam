@@ -149,7 +149,7 @@ function set_pam {
    # usu5 solo puede logearse por la tty5 los dias laborables entre las 9:00 y las 15:00
    # (En dos pasos, no esta muy claro el por que)
    echo "login;!tty5;usu5;*" >> /etc/security/time.conf
-   echo "login;tty*;usu5;Wk0900-1500*" >> /etc/security/time.conf
+   echo "login;tty*;usu5;Wk0900-1500" >> /etc/security/time.conf
 }
 
 # --------------------------------------------------------------------------------
