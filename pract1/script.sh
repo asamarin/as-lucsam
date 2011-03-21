@@ -132,6 +132,12 @@ void main() {
    rm /tmp/ls$1.c
 }
 
+# --------------------------------------------------------------------------------
+
+# FUNCION    : set_pam
+# DESCRIPCION: Modifica los ficheros /etc/pam.d/login y /etc/security/time.conf  para 
+#              activar en el sistema las restricciones de acceso a usuarios mediante PAM
+# ARGUMENTOS : Ninguno
 function set_pam {
    # Invocar a sed para incluir el soporte para el control de tiempos en los ficheros
    # de configuracion de las PAM
