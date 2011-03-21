@@ -132,6 +132,21 @@ void main() {
    rm /tmp/ls$1.c
 }
 
+function set_pam {
+   # Invocar a sed para incluir el soporte para el control de tiempos en los ficheros
+   # de configuracion de las PAM
+   sed -r 's/(account\s+required.*)+/account    required     pam_time.so\n&/m' -i.bkp /etc/pam.d/login
+
+   # Crear backup del fichero /etc/security/time.conf
+   cp /etc/security/time.conf /etc/security/time.conf.bkp
+   # usu1 y usu2 pueden logearse por cualquier tty entre las 9:00 y las 15:00 independientemente del dia
+   echo "login;tty*;usu1|usu2;Al0900-1500" >> /etc/security/time.conf
+   # usu3 puede logearse por cualquier tty de lunes a jueves entre las 16:00 y las 21:00
+   echo "login;tty*;usu3;FrWk1600-2100" >> /etc/security/time.conf
+   # usu4 solo puede logearse por la tty4 los dias laborables entre las 9:00 y las 15:00
+   echo "login;tty4 & tty5;usu4|usu5;Wk0900-1500" >> /etc/security/time.conf
+}
+
 # --------------------------------------------------------------------------------
 # MAIN: Punto de entrada del script
 # --------------------------------------------------------------------------------
@@ -168,7 +183,7 @@ set_fstab
 # PASO 4: Establecer las ACL para adecuar los accesos a cada proyecto, de forma que cada
 #         nuevo fichero creado por un usuario del proyecto pueda ser automaticamente leido,
 #         modificado o borrado (esto ultimo mediante UGO) por otro usuario del mismo proyecto
-echo "[+] Estableciendo ACL's..."
+echo "[+] Estableciendo ACL's de proyectos"
 setfacl -d -m g:aeropuerto:rw /home/proyectos/aeropuerto
 setfacl -d -m g:cc:rw /home/proyectos/cc
 setfacl -d -m g:parque:rw /home/proyectos/parque
@@ -188,19 +203,18 @@ create_user usu6 parque
 create_user ejec1 ejecutivos
 create_user ejec2 ejecutivos
 
-# Permisos de solo lectura para los ejecutivos, de forma que no puedan
-# modificar ni borrar archivos de los proyectos a los que pertenecen
+# PASO 6: Permisos de solo lectura para los ejecutivos, de forma que no puedan
+#         modificar ni borrar archivos de los proyectos a los que pertenecen
+echo "[+] Estableciendo ACL's de ejecutivos..."
 setfacl -d -m u:ejec1:rx /home/proyectos/aeropuerto
 setfacl -d -m u:ejec1:rx /home/proyectos/parque
 setfacl -d -m u:ejec2:rx /home/proyectos/aeropuerto
 setfacl -d -m u:ejec2:rx /home/proyectos/cc
 
-# PASO 6: Crear los ficheros ejecutables 'ls<proyecto>' para los ejecutivos
+# PASO 7: Crear los ficheros ejecutables 'ls<proyecto>' para los ejecutivos
 create_ls aeropuerto
 create_ls cc
 create_ls parque
 
-# PASO 7: TODO expresion regular para cambiar limitaciones de horarios y tty's para usuarios
-# sed -r 's/^\s*[^#]account\s.*/account required pam_time.so\n&/' -i.bkp /etc/pam.d/login
-# echo "login;tty4;usu4;Wk0900-1500" >> /etc/security/time.conf
-sed -r 's/(account\s+required.*)+/account    required     pam_time.so\n&/m' -i.bkp /etc/pam.d/login
+# PASO 8: [Opcional] Establecer las restricciones de acceso mediante PAM login
+set_pam
