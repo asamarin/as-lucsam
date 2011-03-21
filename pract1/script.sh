@@ -137,14 +137,19 @@ function set_pam {
    # de configuracion de las PAM
    sed -r 's/(account\s+required.*)+/account    required     pam_time.so\n&/m' -i.bkp /etc/pam.d/login
 
-   # Crear backup del fichero /etc/security/time.conf
-   cp /etc/security/time.conf /etc/security/time.conf.bkp
+   # Crear backup del fichero /etc/security/time.conf si no existia previamente
+   if [[ ! -x /etc/security/time.conf.bkp]]
+   then
+      cp /etc/security/time.conf /etc/security/time.conf.bkp
+   fi
    # usu1 y usu2 pueden logearse por cualquier tty entre las 9:00 y las 15:00 independientemente del dia
    echo "login;tty*;usu1|usu2;Al0900-1500" >> /etc/security/time.conf
    # usu3 puede logearse por cualquier tty de lunes a jueves entre las 16:00 y las 21:00
    echo "login;tty*;usu3;FrWk1600-2100" >> /etc/security/time.conf
-   # usu4 solo puede logearse por la tty4 los dias laborables entre las 9:00 y las 15:00
-   echo "login;tty4 & tty5;usu4|usu5;Wk0900-1500" >> /etc/security/time.conf
+   # usu5 solo puede logearse por la tty5 los dias laborables entre las 9:00 y las 15:00
+   # (En dos pasos, no esta muy claro el por que)
+   echo "login;!tty5;usu5;*" >> /etc/security/time.conf
+   echo "login;tty*;usu5;Wk0900-1500*" >> /etc/security/time.conf
 }
 
 # --------------------------------------------------------------------------------
