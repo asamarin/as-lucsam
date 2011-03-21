@@ -203,3 +203,4 @@ create_ls parque
 # PASO 7: TODO expresion regular para cambiar limitaciones de horarios y tty's para usuarios
 # sed -r 's/^\s*[^#]account\s.*/account required pam_time.so\n&/' -i.bkp /etc/pam.d/login
 # echo "login;tty4;usu4;Wk0900-1500" >> /etc/security/time.conf
+sed -r 's/(account\s+required.*)+/account    required     pam_time.so\n&/m' -i.bkp /etc/pam.d/login
