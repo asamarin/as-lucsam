@@ -92,6 +92,8 @@ function set_fstab {
    then
       echo "[+] Remontando /home y comprobando cuotas..."
       umount /home
+      # Una vez desmontado /home, se realiza una comprobacion del sistema de ficheros
+      # por seguridad, ya que en ocasiones quotacheck puede encontrar errores
       fsck /home
       mount /home
       quotacheck -vnm /home
@@ -140,8 +142,12 @@ void main() {
 # ARGUMENTOS : Ninguno
 function set_pam {
    # Invocar a sed para incluir el soporte para el control de tiempos en los ficheros
-   # de configuracion de las PAM
-   sed -r 's/(account\s+required.*)+/account    required     pam_time.so\n&/m' -i.bkp /etc/pam.d/login
+   # de configuracion de las PAM, si este no habia sido establecido anteriormente
+   # sed -r 's/(account\s+required.*)+/account    required     pam_time.so\n&/m' -i.bkp /etc/pam.d/login
+   if [[ -z `egrep "^\s*account\s+required\s+pam_time.so" /etc/pam.d/login` ]]
+   then
+      sed -r '0,/^\s*account.*/s/^\s*account.*/account    required     pam_time.so\n&/' -i.bkp /etc/pam.d/login
+   fi
 
    # Crear backup del fichero /etc/security/time.conf si no existia previamente
    if [[ ! -x /etc/security/time.conf.bkp ]]
