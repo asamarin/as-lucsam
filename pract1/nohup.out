@@ -1,0 +1,82 @@
+LyX: Unknown tag `\plaintext_roff_command' [around line 129 of file ~/.lyx/lyxrc.defaults current token: '\plaintext_roff_command' context: '']
+LyX: Unknown tag `\spell_command' [around line 136 of file ~/.lyx/lyxrc.defaults current token: '\spell_command' context: '']
+LyX: Bad boolean `aastex'. Use "false" or "true" [around line 7 of file ~/.lyx/textclass.lst current token: 'aastex' context: '']
+LyX: Bad boolean `aa'. Use "false" or "true" [around line 8 of file ~/.lyx/textclass.lst current token: 'aa' context: '']
+LyX: Bad boolean `article (ACS)'. Use "false" or "true" [around line 9 of file ~/.lyx/textclass.lst current token: 'article (ACS)' context: '']
+LyX: Bad boolean `agums'. Use "false" or "true" [around line 12 of file ~/.lyx/textclass.lst current token: 'agums' context: '']
+LyX: Bad boolean `amsart'. Use "false" or "true" [around line 13 of file ~/.lyx/textclass.lst current token: 'amsart' context: '']
+LyX: Bad boolean `book (AMS)'. Use "false" or "true" [around line 14 of file ~/.lyx/textclass.lst current token: 'book (AMS)' context: '']
+LyX: Bad boolean `armenian-article'. Use "false" or "true" [around line 17 of file ~/.lyx/textclass.lst current token: 'armenian-article' context: '']
+LyX: Bad boolean `article'. Use "false" or "true" [around line 18 of file ~/.lyx/textclass.lst current token: 'article' context: '']
+LyX: Bad boolean `article'. Use "false" or "true" [around line 19 of file ~/.lyx/textclass.lst current token: 'article' context: '']
+LyX: Bad boolean `broadway'. Use "false" or "true" [around line 22 of file ~/.lyx/textclass.lst current token: 'broadway' context: '']
+LyX: Bad boolean `article'. Use "false" or "true" [around line 23 of file ~/.lyx/textclass.lst current token: 'article' context: '']
+LyX: Bad boolean `article (Springer cl2emult)'. Use "false" or "true" [around line 24 of file ~/.lyx/textclass.lst current token: 'article (Springer cl2emult)' context: '']
+LyX: Bad boolean `docbook-chapter'. Use "false" or "true" [around line 27 of file ~/.lyx/textclass.lst current token: 'docbook-chapter' context: '']
+LyX: Bad boolean `section'. Use "false" or "true" [around line 28 of file ~/.lyx/textclass.lst current token: 'section' context: '']
+LyX: Bad boolean `DocBook article (SGML)'. Use "false" or "true" [around line 29 of file ~/.lyx/textclass.lst current token: 'DocBook article (SGML)' context: '']
+LyX: Bad boolean `egs'. Use "false" or "true" [around line 32 of file ~/.lyx/textclass.lst current token: 'egs' context: '']
+LyX: Bad boolean `elsarticle'. Use "false" or "true" [around line 33 of file ~/.lyx/textclass.lst current token: 'elsarticle' context: '']
+LyX: Bad boolean `article (Elsevier, obsolete version)'. Use "false" or "true" [around line 34 of file ~/.lyx/textclass.lst current token: 'article (Elsevier, obsolete version)' context: '']
+LyX: Bad boolean `extarticle'. Use "false" or "true" [around line 37 of file ~/.lyx/textclass.lst current token: 'extarticle' context: '']
+LyX: Bad boolean `extbook'. Use "false" or "true" [around line 38 of file ~/.lyx/textclass.lst current token: 'extbook' context: '']
+LyX: Bad boolean `letter (more font sizes)'. Use "false" or "true" [around line 39 of file ~/.lyx/textclass.lst current token: 'letter (more font sizes)' context: '']
+LyX: Bad boolean `g-brief-de'. Use "false" or "true" [around line 42 of file ~/.lyx/textclass.lst current token: 'g-brief-de' context: '']
+LyX: Bad boolean `g-brief'. Use "false" or "true" [around line 43 of file ~/.lyx/textclass.lst current token: 'g-brief' context: '']
+LyX: Bad boolean `letter (g-brief2)'. Use "false" or "true" [around line 44 of file ~/.lyx/textclass.lst current token: 'letter (g-brief2)' context: '']
+LyX: Bad boolean `hollywood'. Use "false" or "true" [around line 47 of file ~/.lyx/textclass.lst current token: 'hollywood' context: '']
+LyX: Bad boolean `ws-ijmpc'. Use "false" or "true" [around line 48 of file ~/.lyx/textclass.lst current token: 'ws-ijmpc' context: '']
+LyX: Bad boolean `article (IJMPD)'. Use "false" or "true" [around line 49 of file ~/.lyx/textclass.lst current token: 'article (IJMPD)' context: '']
+LyX: Bad boolean `jarticle'. Use "false" or "true" [around line 52 of file ~/.lyx/textclass.lst current token: 'jarticle' context: '']
+LyX: Bad boolean `jbook'. Use "false" or "true" [around line 53 of file ~/.lyx/textclass.lst current token: 'jbook' context: '']
+LyX: Bad boolean `article (AGU++ JGR)'. Use "false" or "true" [around line 54 of file ~/.lyx/textclass.lst current token: 'article (AGU++ JGR)' context: '']
+LyX: Bad boolean `jsbook'. Use "false" or "true" [around line 57 of file ~/.lyx/textclass.lst current token: 'jsbook' context: '']
+LyX: Bad boolean `jss'. Use "false" or "true" [around line 58 of file ~/.lyx/textclass.lst current token: 'jss' context: '']
+LyX: Bad boolean `article (Kluwer)'. Use "false" or "true" [around line 59 of file ~/.lyx/textclass.lst current token: 'article (Kluwer)' context: '']
+LyX: Bad boolean `literate-article'. Use "false" or "true" [around line 62 of file ~/.lyx/textclass.lst current token: 'literate-article' context: '']
+LyX: Bad boolean `book'. Use "false" or "true" [around line 63 of file ~/.lyx/textclass.lst current token: 'book' context: '']
+LyX: Bad boolean `report (Noweb)'. Use "false" or "true" [around line 64 of file ~/.lyx/textclass.lst current token: 'report (Noweb)' context: '']
+LyX: Bad boolean `memoir'. Use "false" or "true" [around line 67 of file ~/.lyx/textclass.lst current token: 'memoir' context: '']
+LyX: Bad boolean `moderncv'. Use "false" or "true" [around line 68 of file ~/.lyx/textclass.lst current token: 'moderncv' context: '']
+LyX: Bad boolean `article (Polish version by M.W.)'. Use "false" or "true" [around line 69 of file ~/.lyx/textclass.lst current token: 'article (Polish version by M.W.)' context: '']
+LyX: Bad boolean `paper'. Use "false" or "true" [around line 72 of file ~/.lyx/textclass.lst current token: 'paper' context: '']
+LyX: Bad boolean `powerdot'. Use "false" or "true" [around line 73 of file ~/.lyx/textclass.lst current token: 'powerdot' context: '']
+LyX: Bad boolean `book (recipes)'. Use "false" or "true" [around line 74 of file ~/.lyx/textclass.lst current token: 'book (recipes)' context: '']
+LyX: Bad boolean `revtex'. Use "false" or "true" [around line 77 of file ~/.lyx/textclass.lst current token: 'revtex' context: '']
+LyX: Bad boolean `scrartcl'. Use "false" or "true" [around line 78 of file ~/.lyx/textclass.lst current token: 'scrartcl' context: '']
+LyX: Bad boolean `article (koma + beamer)'. Use "false" or "true" [around line 79 of file ~/.lyx/textclass.lst current token: 'article (koma + beamer)' context: '']
+LyX: Bad boolean `scrlttr2'. Use "false" or "true" [around line 82 of file ~/.lyx/textclass.lst current token: 'scrlttr2' context: '']
+LyX: Bad boolean `scrreprt'. Use "false" or "true" [around line 83 of file ~/.lyx/textclass.lst current token: 'scrreprt' context: '']
+LyX: Bad boolean `transparencies (seminar)'. Use "false" or "true" [around line 84 of file ~/.lyx/textclass.lst current token: 'transparencies (seminar)' context: '']
+LyX: Bad boolean `simplecv'. Use "false" or "true" [around line 87 of file ~/.lyx/textclass.lst current token: 'simplecv' context: '']
+LyX: Bad boolean `singlecol-new'. Use "false" or "true" [around line 88 of file ~/.lyx/textclass.lst current token: 'singlecol-new' context: '']
+LyX: Bad boolean `article (Inderscience, obsolete version)'. Use "false" or "true" [around line 89 of file ~/.lyx/textclass.lst current token: 'article (Inderscience, obsolete version)' context: '']
+LyX: Bad boolean `svglobal3'. Use "false" or "true" [around line 92 of file ~/.lyx/textclass.lst current token: 'svglobal3' context: '']
+LyX: Bad boolean `svjour'. Use "false" or "true" [around line 93 of file ~/.lyx/textclass.lst current token: 'svjour' context: '']
+LyX: Bad boolean `article (Springer svjour/jog)'. Use "false" or "true" [around line 94 of file ~/.lyx/textclass.lst current token: 'article (Springer svjour/jog)' context: '']
+LyX: Bad boolean `svprobth'. Use "false" or "true" [around line 97 of file ~/.lyx/textclass.lst current token: 'svprobth' context: '']
+LyX: Bad boolean `tarticle'. Use "false" or "true" [around line 98 of file ~/.lyx/textclass.lst current token: 'tarticle' context: '']
+LyX: Bad boolean `book (Japanese in vertical writing)'. Use "false" or "true" [around line 99 of file ~/.lyx/textclass.lst current token: 'book (Japanese in vertical writing)' context: '']
+LyX: Bad boolean `tufte-handout'. Use "false" or "true" [around line 102 of file ~/.lyx/textclass.lst current token: 'tufte-handout' context: '']
+../../../../src/frontends/qt4/Menus.cpp(685): Menu warning: menu entries "Superior|u" and "Multifila|u" share the same shortcut.
+../../../../src/frontends/qt4/Menus.cpp(685): Menu warning: menu entries "Página nueva|n" and "Fantasma|n" share the same shortcut.
+Bus::open: Can not get ibus-daemon's address. 
+IBusInputContext::createInputContext: no connection to ibus-daemon 
+Cannot read layout file `'.
+Error reading `'
+(Check `AGU-article')
+Check your installation and try Options/Reconfigure...
+Error: No se pudo cargar la clase
+----------------------------------------
+Debido a un error en el archivo de formato:
+AGU-article
+no es posible cargarlo. Se usará una clase
+predeterminada con formatos predefinidos.
+LyX no podrá generar una salida correcta.
+Error: Clase de documento no disponible
+----------------------------------------
+El archivo de formato:
+article
+no se puede encontrar. Se usará una clase
+predeterminada con formatos predefinidos.
+LyX no podrá generar una salida correcta.
