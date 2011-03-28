@@ -1,0 +1,39 @@
+IP: 10.0.2.15
+Subnet: 255.255.255.0
+Gateway: 10.0.2.2
+DNS: 10.129.3.130
+
+
+1.- Mi PC -> Propiedades -> Computer Name -> More -> Domain Name asoXX.org
+2.- Cambiar IP. DNS prim 10.0.2.15
+3.- Agregar DNS (Panel de control -> Agregar / quitar programas -> Componentes de Windows -> DNS -> Details... -> DNS)
+4.- Herramientas administrativas -> DNS -> Agregar zonas en resolucion forward y reverse
+FORWARDING(Delegar resolucion de nmombres)
+nslookup
+
+Instalación de AD-> dcpromo. 
+* domain:aso11.org
+* Controlador primario, de nuevo bosque
+* Restore Mode Password: Para dejar a alguien delegado de configurar y administrar el AD
+
+
+ACtive Directory Users and Computers
+
+Creación de usuarios dentro de Domain Controller ( OU ): pototo
+Domain security policy: política de contraseña
+
+gpupdate
+
+
+Intentamos loguearnos con un usuario pototo
+
+Default Domain Controller Security Settings
+* Allow log on locally
+* Allow log on through Terminal Services
+
+Terminal Services Config > Conection > Properties > Permision > Add > Domain Users (Full Control)
+
+gpudate
+
+
+Log in pototo
