@@ -939,23 +939,38 @@ Debe tener asignado los permisos suficientes para poder ejecutar el “ls”
 
 \end_deeper
 \begin_layout Standard
-Comentar por que tenemos un grupo ejecutivos? porque facilita la ejecucion
- de los programas por parte de los ejecutivos unicamente, asi como evita
- tener que editar las ACL de dichos programas, si se hubiera llevado a cabo
- de esa forma (con acls en vez de grupo), en el momento de crear nuevos
- ejecutivos.
+Comentar por que tenemos un grupo ejecutivos? 
+ La creación de un grupo ejecutivos facilita la ejecucion
+ de los programas por parte de los ejecutivos unicamente, asi como simplificar
+ las tareas de asignación de permisos a los nuevos usuarios ejecutivos.
+# tener que editar las ACL de dichos programas, si se hubiera llevado a cabo
+# de esa forma (con acls en vez de grupo).
 \end_layout
 
 \begin_layout Standard
-1.- ACL
+1.- Los ejecutivos asociados a un determinado proyecto podrán leer la información de ese proyecto
+ Este punto lo resolvimos mediante ACLs. Otrogando exclusivamente permisos de lectura
+ y ejecución a cada usuario ejecutivo perteneciente a cada proyecto.
 \end_layout
 
 \begin_layout Standard
-2.- chmod ??0 /home/proyectos/aeropuerto...
+2.- Los ejecutivos que no pertenezcan a un proyecto no deben poder acceder directamente a los directorios de los proyectos
+ En esta ocasión se optó por denegar todos los permisos a cualquier \emph{otro} usuario que intentase
+ leer, ejecutar, o manipular el contenido de las carpetas de las proyectos, incluyendo a los 
+ usuarios ejecutivos que no tuviesen asignado un proyecto.
+	chmod ??0 /home/proyectos/aeropuerto...
 \end_layout
 
 \begin_layout Standard
-3.- programas
+3.- Para que estos ejecutivos puedan controlar el estado de cada proyecto, deben existir en el directorio 
+/usr/local/bin tantos programas como proyectos existan.
+ En este punto se ha decidido crear tres programas(uno por cada proyecto) ejecutables con el bit setuid 
+ activo, y cuyo proietario es \emph{root}. 
+ Para que los ejecutivos puedan ejecutarlo, el grupo propietario de los programas es el 
+ grupo ejecutivos, y tiene asignados permisos de lectura y ejecución.
+ De esta forma, los ejecutivos pueden acceder a los proyectos de manera controlada por los administradores
+ ( quienes definen las operaciones permitidas )
+	programas
 \end_layout
 
 \begin_layout Standard
