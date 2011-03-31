@@ -223,9 +223,21 @@ create_user ejec2 ejecutivos
 # PASO 6: Permisos de solo lectura para los ejecutivos, de forma que no puedan
 #         modificar ni borrar archivos de los proyectos a los que pertenecen
 echo "[+] Estableciendo ACL's de ejecutivos..."
+# Ejecutivo 1: Notese que es necesario establecer ACLs tanto de acceso como por defecto
+# (flag '-d' en este ultimo caso), ya que si se establecen solo las de acceso, no se heredan
+# los permisos deseados en los nuevos ficheros y directorios que se creen a partir del
+# directorio raiz del proyecto; y en el caso contrario, esto es, que se establezcan solo
+# las ACLs por defecto, se aplicaran a todos los items dependientes del directorio raiz
+# pero NO se aplican al propio directorio, por lo que los ejecutivos seguirian sin disfrutar
+# de las nuevas reglas para acceder al directorio del proyecto correspondiente y sus items asociados
+setfacl -m u:ejec1:rx /home/proyectos/aeropuerto
 setfacl -d -m u:ejec1:rx /home/proyectos/aeropuerto
+setfacl -m u:ejec1:rx /home/proyectos/parque
 setfacl -d -m u:ejec1:rx /home/proyectos/parque
+# Ejecutivo 2:
+setfacl -m u:ejec2:rx /home/proyectos/aeropuerto
 setfacl -d -m u:ejec2:rx /home/proyectos/aeropuerto
+setfacl -m u:ejec2:rx /home/proyectos/cc
 setfacl -d -m u:ejec2:rx /home/proyectos/cc
 
 # PASO 7: Crear los ficheros ejecutables 'ls<proyecto>' para los ejecutivos
