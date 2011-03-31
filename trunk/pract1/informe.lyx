@@ -1,8 +1,12 @@
-#LyX 2.0.0beta4 created this file. For more info see http://www.lyx.org/
-\lyxformat 412
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
 \begin_document
 \begin_header
 \textclass article
+\begin_preamble
+\usepackage{color}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language spanish
@@ -55,10 +59,11 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
-\listings_params "language=bash"
+\listings_params "frame=shadowbox,language=bash,rulesepcolor={\color{mygray}}"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
+\html_css_as_file 0
 \html_be_strict false
 \end_header
 
@@ -181,8 +186,8 @@ create_user
  
 \emph default
 para la creación de las cuentas de usuario y asignación de contraseñas.
- Para los puntos 1, 2 y 3 anteriores, se resolvió utilizando la siguiente
- invocación del comando 
+ Para los puntos 1, 2 y 3 del primer apartado, se resolvió utilizando la
+ siguiente invocación del comando 
 \emph on
 chage
 \emph default
@@ -476,27 +481,11 @@ aseguramos que el usuario tenga completo acceso a su directorio de conexión,
 En cuanto al punto 4 de los requisitos referente a las cuotas de usuario,
  se ha utilizado una variante automatizada del comando 
 \emph on
-
-\begin_inset Quotes eld
-\end_inset
-
 edquota
-\begin_inset Quotes erd
-\end_inset
-
-
 \emph default
 , denominada 
 \emph on
-
-\begin_inset Quotes eld
-\end_inset
-
 setquota
-\begin_inset Quotes erd
-\end_inset
-
-
 \emph default
 .
  Esta nos permite establecer las cuotas para el directorio de conexión del
@@ -833,7 +822,8 @@ Existirá un directorio /home/proyectos/comun donde se almacenará información
 \end_layout
 
 \begin_layout Standard
-Para cada proyecto se ha definido un grupo, esto es, los grupos 
+Como nota preliminar, para cada proyecto se ha definido un grupo, esto es,
+ los grupos 
 \begin_inset Quotes eld
 \end_inset
 
@@ -857,28 +847,241 @@ parque
 \begin_inset Quotes erd
 \end_inset
 
+, con la idea de que cada usuario pertenezca a los grupos correspondientes
+ según sus competencias.
+\end_layout
+
+\begin_layout Standard
+Para el primer punto, simplemente se han creado los directorios correspondientes
+ vía 
+\emph on
+mkdir
+\emph default
 .
+ El punto 2 se ha controlado de manera conjunta gracias a la creación de
+ los grupos comentados anteriormente y a la asignación de permisos totales
+ al grupo propietario:
 \end_layout
 
 \begin_layout Standard
-1.- mkdir
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	mkdir -v -p -m 2770 /home/proyectos/aeropuerto 
+\end_layout
+
+\begin_layout Plain Layout
+
+	chgrp aeropuerto /home/proyectos/aeropuerto
+\end_layout
+
+\begin_layout Plain Layout
+
+	mkdir -v -p -m 2770 /home/proyectos/cc 
+\end_layout
+
+\begin_layout Plain Layout
+
+	chgrp cc /home/proyectos/cc
+\end_layout
+
+\begin_layout Plain Layout
+
+	mkdir -v -p -m 2770 /home/proyectos/parque 
+\end_layout
+
+\begin_layout Plain Layout
+
+	chgrp parque /home/proyectos/parque
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-2.- grupos + chmod ??70
+En cuanto al tercer punto, también se han empleado dos acciones conjuntas:
+ por un lado, se ha establecido el bit SETGID en el directorio del proyecto
+ (ya especificado anteriormente en las llamadas a 
+\emph on
+mkdir
+\emph default
+), para que cuando un usuario cree un nuevo fichero o directorio herede
+ el grupo del directorio raíz (es decir, el grupo 
+\begin_inset Quotes eld
+\end_inset
+
+aeropuerto
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+cc
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+parque
+\begin_inset Quotes erd
+\end_inset
+
+, etc...
+ en lugar del propio de cada usuario); por otro lado se han empleado ACL's,
+ de nuevo, sobre el directorio del proyecto, para imponer que los permisos
+ que dichos ficheros o directorios adquieren por defecto en el momento de
+ su creación sean los adecuados, permitiendo a los demás usuarios del grupo
+ hacer lecturas y modificaciones sobre los mismos (descartando así las directric
+es de 
+\emph on
+umask
+\emph default
+).
 \end_layout
 
 \begin_layout Standard
-3.- bit setgid (para que al crear el archivo tenga el grupo del directorio)
- y ACLs setfacl -d -m g:<grupo>:rw <dir>
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	setfacl -d -m g:aeropuerto:rw /home/proyectos/aeropuerto 
+\end_layout
+
+\begin_layout Plain Layout
+
+	setfacl -d -m g:cc:rw /home/proyectos/cc 
+\end_layout
+
+\begin_layout Plain Layout
+
+	setfacl -d -m g:parque:rw /home/proyectos/parque 
+\end_layout
+
+\begin_layout Plain Layout
+
+	setfacl -d -m o::rw /home/proyectos/comun 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-4.- chmod
+Nótese además que, en el caso del directorio 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+comun
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+, esta misma propiedad se aplica a 
+\begin_inset Quotes eld
+\end_inset
+
+otros
+\begin_inset Quotes erd
+\end_inset
+
+, ya que todos los usuarios y ejecutivos accederán por esta vía a dicho
+ directorio y de esta forma se asegura que todos puedan asimismo modificar
+ a placer los nuevos ítems creados.
 \end_layout
 
 \begin_layout Standard
-5.- chmod 1777 (bit sticky)
+El cuarto punto, relativo a que ningún otro usuario puede acceder a los
+ directorios de los proyectos, ya ha sido controlado mediante el uso de
+ los grupos exclusivos para cada directorio y una adecuada asignación de
+ permisos con 
+\emph on
+chmod
+\emph default
+, en este caso restringiendo a 
+\begin_inset Quotes eld
+\end_inset
+
+otros
+\begin_inset Quotes erd
+\end_inset
+
+ todos los privilegios posibles, de forma que no puedan acceder, consultar
+ ni modificar el contenido de dichos directorios.
+\end_layout
+
+\begin_layout Standard
+En lo tocante al punto número 5, en el momento de la creación del directorio
+ común se establece el bit Sticky en el mismo, precisamente para asegurar
+ que sólo el propietario del fichero puede eliminarlo:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	mkdir -v -p -m 1777 /home/proyectos/comun
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Part
@@ -939,38 +1142,40 @@ Debe tener asignado los permisos suficientes para poder ejecutar el “ls”
 
 \end_deeper
 \begin_layout Standard
-Comentar por que tenemos un grupo ejecutivos? 
- La creación de un grupo ejecutivos facilita la ejecucion
- de los programas por parte de los ejecutivos unicamente, asi como simplificar
- las tareas de asignación de permisos a los nuevos usuarios ejecutivos.
-# tener que editar las ACL de dichos programas, si se hubiera llevado a cabo
-# de esa forma (con acls en vez de grupo).
+Comentar por que tenemos un grupo ejecutivos?  La creación de un grupo ejecutivo
+s facilita la ejecucion de los programas por parte de los ejecutivos unicamente,
+ asi como simplificar las tareas de asignación de permisos a los nuevos
+ usuarios ejecutivos.# tener que editar las ACL de dichos programas, si se
+ hubiera llevado a cabo# de esa forma (con acls en vez de grupo).
 \end_layout
 
 \begin_layout Standard
-1.- Los ejecutivos asociados a un determinado proyecto podrán leer la información de ese proyecto
- Este punto lo resolvimos mediante ACLs. Otrogando exclusivamente permisos de lectura
- y ejecución a cada usuario ejecutivo perteneciente a cada proyecto.
+1.- Los ejecutivos asociados a un determinado proyecto podrán leer la información
+ de ese proyecto Este punto lo resolvimos mediante ACLs.
+ Otrogando exclusivamente permisos de lectura y ejecución a cada usuario
+ ejecutivo perteneciente a cada proyecto.
 \end_layout
 
 \begin_layout Standard
-2.- Los ejecutivos que no pertenezcan a un proyecto no deben poder acceder directamente a los directorios de los proyectos
- En esta ocasión se optó por denegar todos los permisos a cualquier \emph{otro} usuario que intentase
- leer, ejecutar, o manipular el contenido de las carpetas de las proyectos, incluyendo a los 
- usuarios ejecutivos que no tuviesen asignado un proyecto.
-	chmod ??0 /home/proyectos/aeropuerto...
+2.- Los ejecutivos que no pertenezcan a un proyecto no deben poder acceder
+ directamente a los directorios de los proyectos En esta ocasión se optó
+ por denegar todos los permisos a cualquier  leer, ejecutar, o manipular
+ el contenido de las carpetas de las proyectos, incluyendo a los  usuarios
+ ejecutivos que no tuviesen asignado un proyecto.	chmod ??0 /home/proyectos/aerop
+uerto...
 \end_layout
 
 \begin_layout Standard
-3.- Para que estos ejecutivos puedan controlar el estado de cada proyecto, deben existir en el directorio 
-/usr/local/bin tantos programas como proyectos existan.
- En este punto se ha decidido crear tres programas(uno por cada proyecto) ejecutables con el bit setuid 
- activo, y cuyo proietario es \emph{root}. 
- Para que los ejecutivos puedan ejecutarlo, el grupo propietario de los programas es el 
- grupo ejecutivos, y tiene asignados permisos de lectura y ejecución.
- De esta forma, los ejecutivos pueden acceder a los proyectos de manera controlada por los administradores
- ( quienes definen las operaciones permitidas )
-	programas
+3.- Para que estos ejecutivos puedan controlar el estado de cada proyecto,
+ deben existir en el directorio /usr/local/bin tantos programas como proyectos
+ existan.
+ En este punto se ha decidido crear tres programas(uno por cada proyecto)
+ ejecutables con el bit setuid  activo, y cuyo proietario es  Para que los
+ ejecutivos puedan ejecutarlo, el grupo propietario de los programas es
+ el  grupo ejecutivos, y tiene asignados permisos de lectura y ejecución.
+ De esta forma, los ejecutivos pueden acceder a los proyectos de manera
+ controlada por los administradores ( quienes definen las operaciones permitidas
+ )	programas
 \end_layout
 
 \begin_layout Standard
@@ -983,6 +1188,26 @@ Comentar por que tenemos un grupo ejecutivos?
 
 \begin_layout Standard
 b) bit setuid
+\end_layout
+
+\begin_layout Part
+Anexo: Script de automatización
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting{./script.sh}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
