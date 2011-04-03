@@ -17,3 +17,25 @@ pero ugh queda feisimo porque se sale de los bordes en
 muchos sitios (no tuvimos en cuenta el limite ese de los 
 80 caracteres...), no se bien que hacer con eso, echale
 un vistazo a ver que te parece.
+
+
+-----------------
+Mira este es el error que me sale al cargar el informe con el LyX:
+
+	Error: No se pudo cargar la clase
+	Debido a un error en el archivo de formato:
+	AGU-article
+	no es posible cargarlo. Se usará una clase
+	predeterminada con formatos predefinidos.
+	LyX no podrá generar una salida correctai.
+
+Y luego:
+
+	Error: Clase de documento no disponible
+	El archivo de formato:
+	article
+	no se puede encontrar. Se usará una clase
+	predeterminada con formatos predefinidos.
+	LyX no podrá generar una salida correcta.
+
+La versión que tengo es la 2.0.0rc1 (lunes 7 de marzo de 2011)
