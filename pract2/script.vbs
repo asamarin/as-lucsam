@@ -19,6 +19,7 @@ WScript.Echo "10 Usuarios creados"
 ' Creating OUs, groups and adding users to group
 '----------------------------------------------------------
 
+'-------------- OUs --------------------------------------
 Set objDomain = GetObject("LDAP://dc=aso11,dc=org")
 Set objOU_Aud = objDomain.Create("organizationalUnit", "ou=Auditorio")
 objOU_Aud.SetInfo
@@ -32,96 +33,94 @@ Set objOU_Par = objDomain.Create("organizationalUnit", "ou=Parque")
 objOU_Par.SetInfo
 
 
-'Set objOU = GetObject("LDAP://OU=Auditorio,dc=aso11,dc=org")
-'Set objUser = objOU.Create("User", "cn= AckermanPilar")
-'objUser.Put "sAMAccountName", "AckermanPila"
-'objUser.SetInfo
-
-
 '-------------- GROUPS AND USERS --------------------------------------
-'Auditorio grupo director objGroupDU
+'Auditorio grupo director
 'Set objOU = GetObject("LDAP://OU=Auditorio,dc=aso11,dc=org")
-Set objGroupDU = objOU_Aud.Create("Group", "cn=director")
-objGroupDU.Put "sAMAccountName", "director"
-objGroupDU.SetInfo
+Set objGroup = objOU_Aud.Create("Group", "cn=director")
+objGroup.Put "sAMAccountName", "director_Auditorio"
+objGroup.SetInfo
 
 Set objUser = GetObject("LDAP://cn=emple2,cn=Users,dc=aso11,dc=org")
-objGroupDU.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
 Set objUser = GetObject("LDAP://cn=emple7,cn=Users,dc=aso11,dc=org")
-objGroupDU.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
 
-'Auditorio grupo participante objGroupPU
+'Auditorio grupo participante
 'Set objOU = GetObject("LDAP://OU=Auditorio,dc=aso11,dc=org")
-Set objGroupPU = objOU_Aud.Create("Group", "cn=participante")
-objGroupPU.Put "sAMAccountName", "participante"
-objGroupPU.SetInfo
+Set objGroup = objOU_Aud.Create("Group", "cn=participante")
+objGroup.Put "sAMAccountName", "participante_Auditorio"
+objGroup.SetInfo
 
 Set objUser = GetObject("LDAP://cn=emple1,cn=Users,dc=aso11,dc=org")
-objGroupPU.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
+WScript.Echo objUser.ADSPath
+
+
+
 Set objUser = GetObject("LDAP://cn=emple3,cn=Users,dc=aso11,dc=org")
-objGroupPU.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
 Set objUser = GetObject("LDAP://cn=emple4,cn=Users,dc=aso11,dc=org")
-objGroupPU.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
 Set objUser = GetObject("LDAP://cn=emple5,cn=Users,dc=aso11,dc=org")
-objGroupPU.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
 Set objUser = GetObject("LDAP://cn=emple6,cn=Users,dc=aso11,dc=org")
-objGroupPU.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
 
-'Aeropuerto grupo director objGroupDR
+'Aeropuerto grupo director
 'Set objOU_ = GetObject("LDAP://OU=Aeropuerto,dc=aso11,dc=org")
-Set objGroupDR = objOU_Aer.Create("Group", "cn=director")
-objGroupDR.Put "sAMAccountName", "director"
-REM objGroupDR.SetInfo
+Set objGroup = objOU_Aer.Create("Group", "cn=director_Aeropuerto")
+objGroup.Put "sAMAccountName", "director"
+objGroup.SetInfo
 
 Set objUser = GetObject("LDAP://cn=emple4,cn=Users,dc=aso11,dc=org")
-objGroupDR.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
 Set objUser = GetObject("LDAP://cn=emple9,cn=Users,dc=aso11,dc=org")
-objGroupDR.Add objUser.ADSPath
+objGroup.Add objUser.ADSPath
 
-REM 'Aeropuerto grupo participante objGroupPE
-REM 'Set objOU = GetObject("LDAP://OU=Aeropuerto,dc=aso11,dc=org")
-REM Set objGroupPE = objOU_Aer.Create("Group", "cn=participante")
-REM objGroupPE.Put "sAMAccountName", "participante"
-REM objGroupPE.SetInfo
+'Aeropuerto grupo participante
+'Set objOU = GetObject("LDAP://OU=Aeropuerto,dc=aso11,dc=org")
+Set objGroup = objOU_Aer.Create("Group", "cn=participante")
+objGroup.Put "sAMAccountName", "participante_Aeropuerto"
+objGroup.SetInfo
 
-REM Set objUser = GetObject("LDAP://cn=emple1,cn=Users,dc=aso11,dc=org")
-REM objGroupPE.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple2,cn=Users,dc=aso11,dc=org")
-REM objGroupPE.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple6,cn=Users,dc=aso11,dc=org")
-REM objGroupPE.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple7,cn=Users,dc=aso11,dc=org")
-REM objGroupPE.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple8,cn=Users,dc=aso11,dc=org")
-REM objGroupPE.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple10,cn=Users,dc=aso11,dc=org")
-REM objGroupPE.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple1,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple2,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple6,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple7,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple8,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple10,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
 
-REM 'Parque grupo director objGroupDP
-REM 'Set objOU = GetObject("LDAP://OU=Parque,dc=aso11,dc=org")
-REM Set objGroupDP = objOU_Par.Create("Group", "cn=director")
-REM objGroupDP.Put "sAMAccountName", "director"
-REM objGroupDP.SetInfo
+'Parque grupo director
+'Set objOU = GetObject("LDAP://OU=Parque,dc=aso11,dc=org")
+Set objGroup = objOU_Par.Create("Group", "cn=director")
+objGroup.Put "sAMAccountName", "director_Parque"
+objGroup.SetInfo
 
-REM Set objUser = GetObject("LDAP://cn=emple6,cn=Users,dc=aso11,dc=org")
-REM objGroupDP.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple8,cn=Users,dc=aso11,dc=org")
-REM objGroupDP.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple6,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple8,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
 
 
-REM 'Parque grupo participante objGroupPP
-REM 'Set objOU = GetObject("LDAP://OU=Parque,dc=aso11,dc=org")
-REM Set objGroupPP = objOU_Par.Create("Group", "cn=participante")
-REM objGroupPP.Put "sAMAccountName", "participante"
-REM objGroupPP.SetInfo
+'Parque grupo participante
+'Set objOU = GetObject("LDAP://OU=Parque,dc=aso11,dc=org")
+Set objGroup = objOU_Par.Create("Group", "cn=participante")
+objGroup.Put "sAMAccountName", "participante_Parque"
+objGroup.SetInfo
 
-REM Set objUser = GetObject("LDAP://cn=emple3,cn=Users,dc=aso11,dc=org")
-REM objGroupPP.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple5,cn=Users,dc=aso11,dc=org")
-REM objGroupPP.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple9,cn=Users,dc=aso11,dc=org")
-REM objGroupPP.Add objUser.ADSPath
-REM Set objUser = GetObject("LDAP://cn=emple10,cn=Users,dc=aso11,dc=org")
-REM objGroupPP.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple3,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple5,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple9,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=emple10,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
 
 
