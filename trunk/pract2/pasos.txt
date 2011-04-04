@@ -1,0 +1,49 @@
+NOTA: Unidades organizativas = Proyecto1, Proyecto2, etc... y dentro de estas, crearemos
+los grupos: Directores y Participantes (ver guion de la practica)
+
+
+a) Sistema
+
+* Cualquier usuario debe poder apagar el sistema
+Admin Tools -> Default Domain Security Settings -> Local Policies -> User Rights Assignment -> Shut down the system
+
+* Los usuarios tienen restringidas las horas de acceso al sistema
+Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Properties -> Pestaña account -> Logon hours
+
+
+b) Contraseñas
+
+* A fin de facilitar la gestión, asignar como contraseña el nombre del usuario
+Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Reset password
+
+* Los usuarios deben cambiar las contraseñas cada tres meses
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Maximum password age -> 90 days
+
+* Los usuarios no pueden cambiar las contraseñas hasta 2 semanas después de haberla cambiado
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Minimum password age -> 14 days
+
+* No se permiten contraseñas en  blanco. Longitud mínima: 4 caracteres
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Minimum password length -> 4 characters
+
+* La nueva contraseña no debe coincidir con las dos últimas introducidas por el usuario
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Enforce password history -> 2 passwords remembered
+
+* Si se producen 4 intentos de autenticación fallidos a una cuenta de usuario en un intervalo de 10 minutos, ésta debe quedar permanentemente bloqueada. 
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Account lockout threshold -> 4 invalid logon attempts
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Account lockout duration -> 0 (Permancece bloqueada hasta que el administrador intervenga)
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Reset account lockout counter after -> 10 minutes
+
+* Deben quedar registrados los intentos fallidos de entrada en el sistema
+Admin Tools -> Default Domain Security Settings -> Local Policies -> Audit Policy -> Audit account logon events -> Define these policy settings -> Chequear Failure
+
+
+c) Directorio privado de los usuarios
+
+Cada usuario debe disponer de un directorio propio de conexión con las siguientes restricciones:
+
+* Todo usuario debe disponer de un directorio propio a partir del directorio \home del servidor, cuyo nombre coincida con el de la cuenta del usuario. El usuario
+podrá acceder automáticamente a este directorio a partir de la unidad n: desde cualquier máquina del dominio.
+
+* En este directorio, el usuario debe tener control total.
+
+* El resto de  los usuarios no podrá tener ningún tipo de acceso sobre este directorio
