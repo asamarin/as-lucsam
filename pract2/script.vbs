@@ -8,19 +8,22 @@ Set objContainer = GetObject("LDAP://cn=Users," & _
 For i = 1 To 10
     Set objLeaf = objContainer.Create("User", "cn=emple" & i)
     objLeaf.Put "sAMAccountName", "emple" & i
-    objLeaf.SetPassword "emple" & i
+    objLeaf.Put "userPrincipalName", "emple" & i & "@aso11.org"
     objLeaf.SetInfo
+
+    Set objUser = GetObject("LDAP://cn=emple" & i & ",cn=Users,dc=aso11,dc=org")
+    objUser.AccountDisabled = FALSE
+    objUser.SetPassword "emple" & i
+    objUser.SetInfo
 Next
  
 WScript.Echo "10 Usuarios creados"
 
-
-
 '----------------------------------------------------------
-' Creating ous, groups and adding users to group
+' Creating OUs, groups and adding users to group
 '----------------------------------------------------------
 
-'-------------- ous --------------------------------------
+'-------------- OUs --------------------------------------
 Set objDomain = GetObject("LDAP://dc=aso11,dc=org")
 Set objOU_Aud = objDomain.Create("organizationalUnit", "ou=Auditorio")
 objOU_Aud.SetInfo
@@ -34,7 +37,7 @@ Set objOU_Par = objDomain.Create("organizationalUnit", "ou=Parque")
 objOU_Par.SetInfo
 
 
-'-------------- GRouPS AND USERS --------------------------------------
+'-------------- GROUPS AND USERS --------------------------------------
 'Auditorio grupo director
 'Set objOU = GetObject("LDAP://ou=Auditorio,dc=aso11,dc=org")
 Set objGroup = objOU_Aud.Create("Group", "cn=director")
@@ -69,8 +72,8 @@ objGroup.Add objUser.ADSPath
 
 'Aeropuerto grupo director
 'Set objOU_ = GetObject("LDAP://ou=Aeropuerto,dc=aso11,dc=org")
-Set objGroup = objOU_Aer.Create("Group", "cn=director_Aeropuerto")
-objGroup.Put "sAMAccountName", "director"
+Set objGroup = objOU_Aer.Create("Group", "cn=director")
+objGroup.Put "sAMAccountName", "director_Aeropuerto"
 objGroup.SetInfo
 
 Set objUser = GetObject("LDAP://cn=emple4,cn=Users,dc=aso11,dc=org")
