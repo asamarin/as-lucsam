@@ -1,13 +1,17 @@
 Const MIN_IN_DAY = 1440
 Const SEC_IN_MIN = 60
+Const HUNDRED_NS_IN_SEC = 10000000
  
 'Set objDomain = GetObject("WinNT://aso11")
 Set objAdS = GetObject("LDAP://dc=aso11,dc=org")
-
+Set objMaxPwdAge = objAdS.Get("maxPwdAge")
+'WScript.Echo objMaxPwdAge.LowPart & "; " & objMaxPwdAge.HighPart
 ' Seteo cosas!
 'objDomain.Put "MaxPasswordAge", 30 * MIN_IN_DAY * SEC_IN_MIN
-objAds.Put "minPwdLength", 9
-objAds.Put "maxPwdAge", 30 * MIN_IN_DAY * SEC_IN_MIN
+'objAds.Put "minPwdLength", 9
+'objAds.Put "LowPart", 5000
+objAds.Put "maxPwdAge", 90 * MIN_IN_DAY * SEC_IN_MIN '* 10 * 1000 * 1000
+objAds.SetInfo
 
 WScript.Echo "Hecho"
 
