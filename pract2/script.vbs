@@ -8,6 +8,7 @@ Set objContainer = GetObject("LDAP://cn=Users," & _
 For i = 1 To 10
     Set objLeaf = objContainer.Create("User", "cn=emple" & i)
     objLeaf.Put "sAMAccountName", "emple" & i
+    objLeaf.SetPassword "emple" & i
     objLeaf.SetInfo
 Next
  
