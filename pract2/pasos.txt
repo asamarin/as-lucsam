@@ -43,7 +43,22 @@ Cada usuario debe disponer de un directorio propio de conexión con las siguient
 
 * Todo usuario debe disponer de un directorio propio a partir del directorio \home del servidor, cuyo nombre coincida con el de la cuenta del usuario. El usuario
 podrá acceder automáticamente a este directorio a partir de la unidad n: desde cualquier máquina del dominio.
+Crear directorio "C:\home" -> (Click derecho) -> Sharing and security -> Pestaña Sharing -> Share this folder -> Permissions -> Full control for Everyone (permisos de red)
+Otra vez click derecho -> Propiedades -> Pestaña security -> Advanced -> Desmarcar "Allow inheritable permissions..." -> Remove en el cuadro de dialogo
+Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Properties -> Pestaña Profile -> Home folder -> Connect N: to \\ORD1\home\empleX 
+(No hace falta crear la carpeta del empleado previamente)
 
 * En este directorio, el usuario debe tener control total.
 
 * El resto de  los usuarios no podrá tener ningún tipo de acceso sobre este directorio
+
+
+-------
+Para lo de los proyectos:
+
+En script.bat -> C:\Windows\SYSVOL\sysvol (shared folder)
+net use x: \\ord11\proyectos\aeropuerto
+        y: \\ord11\proyectos\cc
+        z: \\ord11\proyectos\parque
+
+Active Directory Users and Computers -> Click Derecho sobre el usuario -> properties -> pestaña -> profile -> logon script -> script.bat (sin rutas, solo nombre y extension)
