@@ -4,36 +4,36 @@ los grupos: Directores y Participantes (ver guion de la practica)
 
 a) Sistema
 
-* Cualquier usuario debe poder apagar el sistema
+	* Cualquier usuario debe poder apagar el sistema
 Admin Tools -> Default Domain Security Settings -> Local Policies -> User Rights Assignment -> Shut down the system
 
-* Los usuarios tienen restringidas las horas de acceso al sistema
+	* Los usuarios tienen restringidas las horas de acceso al sistema
 Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Properties -> Pestaña account -> Logon hours
 
 
 b) Contraseñas
 
-* A fin de facilitar la gestión, asignar como contraseña el nombre del usuario
+	* A fin de facilitar la gestión, asignar como contraseña el nombre del usuario
 Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Reset password
 
-* Los usuarios deben cambiar las contraseñas cada tres meses
+	* Los usuarios deben cambiar las contraseñas cada tres meses
 Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Maximum password age -> 90 days
 
-* Los usuarios no pueden cambiar las contraseñas hasta 2 semanas después de haberla cambiado
+	* Los usuarios no pueden cambiar las contraseñas hasta 2 semanas después de haberla cambiado
 Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Minimum password age -> 14 days
 
-* No se permiten contraseñas en  blanco. Longitud mínima: 4 caracteres
+	* No se permiten contraseñas en  blanco. Longitud mínima: 4 caracteres
 Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Minimum password length -> 4 characters
 
-* La nueva contraseña no debe coincidir con las dos últimas introducidas por el usuario
+	* La nueva contraseña no debe coincidir con las dos últimas introducidas por el usuario
 Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Enforce password history -> 2 passwords remembered
 
-* Si se producen 4 intentos de autenticación fallidos a una cuenta de usuario en un intervalo de 10 minutos, ésta debe quedar permanentemente bloqueada. 
+	* Si se producen 4 intentos de autenticación fallidos a una cuenta de usuario en un intervalo de 10 minutos, ésta debe quedar permanentemente bloqueada. 
 Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Account lockout threshold -> 4 invalid logon attempts
 Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Account lockout duration -> 0 (Permancece bloqueada hasta que el administrador intervenga)
 Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Reset account lockout counter after -> 10 minutes
 
-* Deben quedar registrados los intentos fallidos de entrada en el sistema
+	* Deben quedar registrados los intentos fallidos de entrada en el sistema
 Admin Tools -> Default Domain Security Settings -> Local Policies -> Audit Policy -> Audit account logon events -> Define these policy settings -> Chequear Failure
 
 
@@ -41,24 +41,70 @@ c) Directorio privado de los usuarios
 
 Cada usuario debe disponer de un directorio propio de conexión con las siguientes restricciones:
 
-* Todo usuario debe disponer de un directorio propio a partir del directorio \home del servidor, cuyo nombre coincida con el de la cuenta del usuario. El usuario
+	* Todo usuario debe disponer de un directorio propio a partir del directorio \home del servidor, cuyo nombre coincida con el de la cuenta del usuario. El usuario
 podrá acceder automáticamente a este directorio a partir de la unidad n: desde cualquier máquina del dominio.
+
+
+	* En este directorio, el usuario debe tener control total
+
+	* El resto de  los usuarios no podrá tener ningún tipo de acceso sobre este directorio
+
 Crear directorio "C:\home" -> (Click derecho) -> Sharing and security -> Pestaña Sharing -> Share this folder -> Permissions -> Full control for Everyone (permisos de red)
 Otra vez click derecho -> Propiedades -> Pestaña security -> Advanced -> Desmarcar "Allow inheritable permissions..." -> Remove en el cuadro de dialogo
 Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Properties -> Pestaña Profile -> Home folder -> Connect N: to \\ORD1\home\empleX 
 (No hace falta crear la carpeta del empleado previamente)
 
-* En este directorio, el usuario debe tener control total.
-
-* El resto de  los usuarios no podrá tener ningún tipo de acceso sobre este directorio
-
-
 -------
+
+
+d) Proyectos de la organización.La organización tiene en marcha diversos proyectos. Éstos han de cumplir:
+
+    *  Cada proyecto dispondrá de un directorio para almacenar la información relativa
+       al mismo bajo el directorio \proyectos. Cada usuario podrá acceder
+       automáticamente a los proyectos en los que participe a partir de las unidades p:,
+       q:,... desde cualquier máquina del dominio.
+
+Se crea una carpeta 'proyectos' en C:\ , y se le da full control a everyone en permisos de red. En los permisos NTFS
+de 'proyectos' se permite acceso exclusivamente a los administradores, y se desactiva la herencia de permisos como 
+con la carpeta 'home'. Dentro de la carpeta 'proyectos', se crean dentro tres
+carpetas, una por proyecto. Se le da acceso por NTFS a cada unidad organizativa responsable de su proyecto.
+
+    *  Todos los usuarios que participan en un proyecto deben tener la posibilidad de
+       leer y modificar los archivos que forman parte del proyecto
+
+Se agregan los participantes y directores de cada proyecto como grupos privilegiados en sus respectivas carpetas de proyectos. A los participantes se les da permiso de 'Modificar' y 'Lectura'.
+
+
+    *  Los usuarios no podrán crear ni borrar archivos del proyecto. Esta función la
+       realizará el director del mismo.
+
+VER !!! Incompleto
+
+Dentro de las propiedades de cada proyecto > Security > Advanced > Pinchar sobre participantes > Edit. 
+Se desmarca Create files/Write Data, y Delete (Write atributes se deja marcado). 
+
+Para los directores se marca que puedan crear ficheros, y se deja desmarcado
+Create Folder/Append Data, además, se marca Delete, y Delete Subfolders and files, porque deben poder crear
+y borrar los ficheros del proyecto al que pertenecen.
+
+Para ambos se marca Write Attributes, Write extended attributes, 
+
+
+
 Para lo de los proyectos:
 
-En script.bat -> C:\Windows\SYSVOL\sysvol (shared folder)
-net use x: \\ord11\proyectos\aeropuerto
-        y: \\ord11\proyectos\cc
-        z: \\ord11\proyectos\parque
+En C:\Windows\SYSVOL\sysvol\aso11.org\scripts (shared folder) se guarda el siguiente script batch
 
-Active Directory Users and Computers -> Click Derecho sobre el usuario -> properties -> pestaña -> profile -> logon script -> script.bat (sin rutas, solo nombre y extension)
+unidades_proyectos.bat:
+-----------------------------------------------------------
+net use p: \\ord11\proyectos\auditorio
+net use q: \\ord11\proyectos\aeropuerto
+net use r: \\ord11\proyectos\parque
+-----------------------------------------------------------
+
+Para cada usuario se repiten los mismo pasos:
+
+Active Directory Users and Computers -> Click Derecho sobre el usuario -> properties -> pestaña -> profile -> logon script -> unidades_proyectos.bat (sin rutas, solo nombre y extension)
+
+
+
