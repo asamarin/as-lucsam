@@ -1,17 +1,18 @@
 Dim arrLogonHoursBytes(20)
 Dim arrLogonHoursBits(167)
+
 arrDayOfWeek = Array _
   ("Sun", "Mon", "Tue", "Wed", _
    "Thu", "Fri", "Sat")
 
 Set objUser = GetObject _
   ("LDAP://cn=emple1,cn=Users,dc=aso11,dc=org")
-objUser.GetInfoEx Array("LogonHours"), 0
-arrLogonHours = objUser.Get("LogonHours")
+'objUser.GetInfoEx Array("logonHours"), 0
+arrLogonHours = objUser.Get("logonHours")
 
-For i = 1 To LenB(arrLogonHours)
-     arrLogonHoursBytes(i-1) = AscB(MidB(arrLogonHours, i, 1))
-Next
+'For i = 1 To LenB(arrLogonHours)
+'     arrLogonHoursBytes(i-1) = AscB(MidB(arrLogonHours, i, 1))
+'Next
 
 intCounter = 0
 intLoopCounter = 0
@@ -24,7 +25,8 @@ For i = 0 to 6
 	SetLogonHourBits arrLogonHoursBytes(i*3+1), 2, "eve"
 	SetLogonHourBits arrLogonHoursBytes(i*3+2), 3, "eve"
 Next
-for i = 0 to 20
+
+For i = 0 to 20
 	WScript.Echo arrLogonHoursBytes(i)
 next
    REM If intCounter = 0 Then
@@ -52,8 +54,8 @@ REM For i = 1 To LenB(arrLogonHours)
 REM Next
 
 
-'objUser.Put "LogonHours", arrLogonHoursBytes
-'objUser.SetInfo
+objUser.Put "LogonHours", arrLogonHoursBytes
+objUser.SetInfo
 
 
 WScript.echo "Hecho !"
