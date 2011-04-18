@@ -8,6 +8,7 @@ a) Sistema
 Admin Tools -> Default Domain Security Settings -> Local Policies -> User Rights Assignment -> Shut down the system
 
 	* Los usuarios tienen restringidas las horas de acceso al sistema
+
 Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Properties -> Pestaña account -> Logon hours
 
 
@@ -56,6 +57,9 @@ Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el u
 
 -------
 
+AQUI NOS QUEDAMOS !!!!!
+
+--------------------
 
 d) Proyectos de la organización.La organización tiene en marcha diversos proyectos. Éstos han de cumplir:
 
@@ -78,16 +82,16 @@ Se agregan los participantes y directores de cada proyecto como grupos privilegi
     *  Los usuarios no podrán crear ni borrar archivos del proyecto. Esta función la
        realizará el director del mismo.
 
-VER !!! Incompleto
-
 Dentro de las propiedades de cada proyecto > Security > Advanced > Pinchar sobre participantes > Edit. 
-Se desmarca Create files/Write Data, y Delete (Write atributes se deja marcado). 
 
-Para los directores se marca que puedan crear ficheros, y se deja desmarcado
-Create Folder/Append Data, además, se marca Delete, y Delete Subfolders and files, porque deben poder crear
-y borrar los ficheros del proyecto al que pertenecen.
+Se crearan dos permisos por cada participante y carpeta de proyecto. Para los permisos sobre las carpetas y subcarpetas se selecciona
+en 'Apply onto', 'This folder and subfolders', y se desmarca 'Create Folder' y 'Create Files' y ambos 'Delete ...' 
+('Write atributes' y "Read Attributes', 'List Folder/Read Data', 'Traverse Folder/Execute File' se dejan marcados).
 
-Para ambos se marca Write Attributes, Write extended attributes, 
+Para los permisos sobre archivos, se selecciona 'Files only' en 'Apply onto', y se repiten los permisos anteriores pero
+marcando ahora 'Write Data' y 'Append Data'.
+
+
 
 
 
@@ -106,5 +110,75 @@ Para cada usuario se repiten los mismo pasos:
 
 Active Directory Users and Computers -> Click Derecho sobre el usuario -> properties -> pestaña -> profile -> logon script -> unidades_proyectos.bat (sin rutas, solo nombre y extension)
 
+e) Usuarios de la organización
+    *  Los usuarios implicados en los proyectos tendrán restringida la hora de acceso al
+       sistema
 
+Está hecho en el punto a) 2.
+
+    *  Les debe ser asignado un perfil flotante que no puedan modificar
+
+Active Directory Users and Computers > Users > Seleccionar un usuario > Propiedades > Profile >
+En 'Profile Path' escribir \\ORD11\home\usuXXX donde usuXXX es el nombre del usuario seleccionado.
+Se recomienda copiar el perfil desde Start -> Control Panel -> System -> Advanced -> User Profiles -> Settings ->
+Copy To -> \\ORD11\home\usuXXX y darle permisos debajo en 'Permitted to use'
+Para que no puedan modificarlo, cambiar en \\ORD11\home\usuXXX (o en la carpeta local de Documents and Settings) la extension
+del fichero 'ntuser.dat' a 'ntuser.man', de forma que el perfil se convierte en mandatorio
+
+
+e) Directores de los proyectos. Cada proyecto tiene al menos un director.
+
+    *  Tienen control total sobre los archivos del proyecto que dirigen
+
+
+Para los directores, dentro de las propiedades de cada proyecto > Security > Pinchar sobre director >
+y marcar 'Full Control', para así dar permisos totales a los directores de su correspondiente proyecto.
+
+
+f) Ejecutivos de la organización
+
+Se crea un nuevo grupo ejecutivos, y se le asignan los tres ejecutivos.
+
+    *   Podrán acceder a cualquiera de los directorios de los proyectos en curso
+
+Crear nuevo script en SYSVOL y mapear 'p:' a 'C:\proyectos', asignarselo a los ejecutivos en el campo 'Logon script' como esta explicado arriba
+
+    *   Pueden leer la información de estos proyectos
+
+Desde la carpeta proyectos se añade un nuevo permiso de lectura y ejecución para el grupo ejecutivos.
+
+    *   No pueden alterar dicha información
+
+En el punto anterior, al especificar los permisos del grupo ejecutivos sobre la carpeta proyectos, se le indica que no puedan cambiar
+cambiar los permisos de dicha carpeta.
+
+
+g) Resto de usuarios
+    *   No dispondrán de ningún derecho de acceso a los directorios de los proyectos
+
+
+--------------------------------------
+
+Situación actual de la organización
+   * Existen actualmente 3 proyectos en ejecución: auditorio, aeropuerto y parque
+
+OK
+
+   * Relacionados con estos proyectos, la empresa dispone de 10 empleados, 5 en el
+     turno de mañana (08:00-15:00) (emple1-emple5) y 5 en el grupo de tarde
+     (14:00-21:00) (emple6-emple10).
+
+Ver como cambiar los horarios de conexion mas arriba
+
+   * Los empleados 1, 3, y 5 han sido contratados temporalmente (6 meses)
+
+Active Directory Users and Computers -> Click derecho sobre el usuario en cuestion -> Properties -> Pestaña 'Account' -> Account expires -> Seleccionar 'End of:' y marcar 6 meses mas adelante en el calendario desplegable
+
+   * Hay 3 ejecutivos en la organización: ejec1, ejec2 y ejec3.
+
+OK
+
+   * Los usuarios admin1 y admin2 no están relacionados con ningún proyecto.
+
+Ignorar esto
 
