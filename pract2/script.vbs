@@ -17,7 +17,21 @@ For i = 1 To 10
     objUser.SetInfo
 Next
  
-WScript.Echo "10 Usuarios creados"
+WScript.Echo "10 Usuarios empleX creados"
+
+For i = 1 To 2
+    Set objLeaf = objContainer.Create("User", "cn=ejec" & i)
+    objLeaf.Put "sAMAccountName", "ejec" & i
+    objLeaf.Put "userPrincipalName", "ejec" & i & "@aso11.org"
+    objLeaf.SetInfo
+
+    Set objUser = GetObject("LDAP://cn=ejec" & i & ",cn=Users,dc=aso11,dc=org")
+    objUser.AccountDisabled = FALSE
+    objUser.SetPassword "ejec" & i
+    objUser.SetInfo
+Next
+
+WScript.Echo "2 Usuarios ejecX creados"
 
 '----------------------------------------------------------
 ' Creating OUs, groups and adding users to group
@@ -127,4 +141,15 @@ objGroup.Add objUser.ADSPath
 Set objUser = GetObject("LDAP://cn=emple10,cn=Users,dc=aso11,dc=org")
 objGroup.Add objUser.ADSPath
 
+' -------------------------
+' Grupo ejecutivos
+' -------------------------
+Set objDomain = GetObject("LDAP://cn=Users,dc=aso11,dc=org")
+Set objGroup = objDomain.Create("Group", "cn=ejecutivos")
+objGroup.Put "sAMAccountName", "ejecutivos"
+objGroup.SetInfo
 
+Set objUser = GetObject("LDAP://cn=ejec1,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath
+Set objUser = GetObject("LDAP://cn=ejec2,cn=Users,dc=aso11,dc=org")
+objGroup.Add objUser.ADSPath

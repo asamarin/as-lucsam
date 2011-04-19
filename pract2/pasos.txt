@@ -91,7 +91,7 @@ en 'Apply onto', 'This folder and subfolders', y se desmarca 'Create Folder' y '
 Para los permisos sobre archivos, se selecciona 'Files only' en 'Apply onto', y se repiten los permisos anteriores pero
 marcando ahora 'Write Data' y 'Append Data'.
 
-
+Para los directores
 
 
 
@@ -130,6 +130,7 @@ e) Directores de los proyectos. Cada proyecto tiene al menos un director.
 
     *  Tienen control total sobre los archivos del proyecto que dirigen
 
+REVISAR !!! --- AQUI ES SOLO sobre los archivos ( Files only ) ---
 
 Para los directores, dentro de las propiedades de cada proyecto > Security > Pinchar sobre director >
 y marcar 'Full Control', para así dar permisos totales a los directores de su correspondiente proyecto.
