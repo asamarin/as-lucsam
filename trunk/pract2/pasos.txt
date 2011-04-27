@@ -177,9 +177,16 @@ Active Directory Users and Computers -> Click derecho sobre el usuario en cuesti
 
    * Hay 3 ejecutivos en la organización: ejec1, ejec2 y ejec3.
 
-OK
+OK (se creo un nuevo grupo 'Ejecutivos' dentro de Users y se metieron los 3 ejecutivos ahi, para manejarlos a la vez)
 
    * Los usuarios admin1 y admin2 no están relacionados con ningún proyecto.
 
 Ignorar esto
+
+------ IMPORTANTE -------
+
+Para los perfiles:
+
+Crear un usuario por defecto, loguearse, copiar su perfil a alguna carpeta compartida (C:\netlogon\default por ejemplo), cambiar alli lo de mandatorio, y en el active directory users and computers,
+seleccionar todos los usuarios de una vez y hacer click derecho -> properties -> account -> cambiar 'profile path' y hacer que apunten todos al perfil de este usuario ('\\ORD11\default')
 
