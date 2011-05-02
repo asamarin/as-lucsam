@@ -1,0 +1,25 @@
+
+
+Configurar nueva conexion de red en VirtualBox:
+
+-> Cambiar tipo de red de NAT a Red interna
+
+Configurar conexion entre cliente y servidor (en Linux):
+
+-> ifconfig -a (para ver las interfaces)
+   ifconfig eth1 192.168.0.20 (en el servidor)
+   ifconfig eth1 192.168.0.30 (en el cliente)
+
+   Hacer ping para comprobar que esta todo correcto
+
+-> Configurando LDAP:
+
+   suffix:dc=aso11,dc=org
+   rootdn:
+
+   Instalar opcionalmente el 'gq'
+
+   Recordar, no usar slapd.conf, sino /etc/openldap/slapd.d y modificar los ficheros pertinentes ahi
+   En especial, la 'cn=config' y 'olcdatabase{1}bdb.ldif'
+   Arrancar servicio slapd
+   A partir de ahi, modificar con 'ldapadd', 'ldapmodify', etc...
