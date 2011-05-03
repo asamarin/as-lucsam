@@ -13,13 +13,14 @@
 #              de trabajo en grupo.                 #
 #####################################################
 
-# --------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 # FUNCION    : create_user
 # DESCRIPCION: Crea en el sistema un nuevo usuario
 # ARGUMENTOS : 
 #   $1 => Nombre de usuario
-#   $2 => Lista de grupos suplementarios del usuario (Ej: "cc,aeropuerto,parque")
+#   $2 => Lista de grupos suplementarios del usuario (Ej: 
+#         "cc,aeropuerto,parque")
 function create_user {
    echo "[+] Creando usuario '$1'"
    # Crear el usuario obtenido en el primer argumento de la funcion, con
@@ -33,8 +34,10 @@ function create_user {
 
    # Cambiar los parametros de caducidad de su password, segun se indica:
    #   -M 90 => La contrasenya caduca en 3 meses
-   #   -W 1  => Se informara al usuario 1 dia antes de la caducidad de la misma
-   #   -I 2  => 2 dias tras la expiracion, la cuenta del usuario sera deshabilitada
+   #   -W 1  => Se informara al usuario 1 dia antes de la caducidad de
+   #            la misma
+   #   -I 2  => 2 dias tras la expiracion, la cuenta del usuario sera
+   #            deshabilitada
    chage -M 90 -W 1 -I 2 $1
 
    # Root sera el propietario de su directorio de conexion, para que el 
@@ -52,16 +55,17 @@ function create_user {
    #   Sin limite de inodos
    setquota $1 50000 60000 0 0 -a
 
-   # Establecer el periodo de gracia a la hora de rebasar el limite blando (2 dias)
+   # Establecer el periodo de gracia a la hora de rebasar el limite 
+   # blando (2 dias)
    setquota $1 -T 2 0 -a 2&>/dev/null
 }
 
-# --------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 # FUNCION    : set_fstab
-# DESCRIPCION: Modifica el fichero /etc/fstab para activar en el sistema el uso
-#              de cuotas de usuario y listas de control de acceso (ACL); en caso
-#              necesario, remonta la particion /home y 
+# DESCRIPCION: Modifica el fichero /etc/fstab para activar en el sistema 
+#              el uso de cuotas de usuario y listas de control de acceso
+#              (ACL); en caso necesario, remonta la particion /home y 
 # ARGUMENTOS : Ninguno
 function set_fstab {
    local remount_needed=false
@@ -86,14 +90,15 @@ function set_fstab {
       echo "[+] ACL's establecidas previamente"
    fi
 
-   # Si hubo algun cambio en las comprobaciones anteriores, es necesario remontar /home
-   # Tambien se activan aqui las cuotas
+   # Si hubo algun cambio en las comprobaciones anteriores, es necesario
+   # remontar /home. Tambien se activan aqui las cuotas
    if ($remount_needed)
    then
       echo "[+] Remontando /home y comprobando cuotas..."
       umount /home
-      # Una vez desmontado /home, se realiza una comprobacion del sistema de ficheros
-      # por seguridad, ya que en ocasiones quotacheck puede encontrar errores
+      # Una vez desmontado /home, se realiza una comprobacion del sistema 
+      # de ficheros por seguridad, ya que en ocasiones quotacheck puede
+      # encontrar errores
       fsck /home
       mount /home
       quotacheck -vnm /home
@@ -101,16 +106,18 @@ function set_fstab {
    fi
 }
 
-# --------------------------------------------------------------------------------
+# --------....--------------------------------------------------------------
 
 # FUNCION    : create_ls
-# DESCRIPCION: Crea un pequenyo programa ejecutable en C que emula un 'ls', pensado
-#              para ser utilizado por los ejecutivos que desean observar el desarrollo
-#              de proyectos a los cuales no estan asignados; posteriormente se compila
-#              este codigo fuente y se coloca el ejecutable en '/usr/local/bin'
-#              El nombre del ejecutable generado tiene la forma 'ls<proyecto>'
+# DESCRIPCION: Crea un pequenyo programa ejecutable en C que emula un 
+#              'ls', pensado para ser utilizado por los ejecutivos que
+#              desean observar el desarrollo de proyectos a los cuales no
+#              estan asignados; posteriormente se compila este codigo fuente
+#              y se coloca el ejecutable en '/usr/local/bin'. El nombre del
+#              ejecutable generado tiene la forma 'ls<proyecto>'
 # ARGUMENTOS :
-#   $1 => Nombre del proyecto (Ej: "aeropuerto" genera '/usr/local/bin/lsaeropuerto')
+#   $1 => Nombre del proyecto (Ej: "aeropuerto" genera 
+#         '/usr/local/bin/lsaeropuerto')
 function create_ls {
    # Crear en /tmp el codigo fuente en C
    echo "
@@ -121,66 +128,78 @@ void main() {
    execl(\"/bin/ls\", \"/bin/ls\", \"-l\", \"/home/proyectos/${1}\", NULL); 
 }" > /tmp/ls$1.c
    
-   # Compilar el programa C creado y depositar el ejecutable resultante en el
-   # directorio destino '/usr/local/bin'
+   # Compilar el programa C creado y depositar el ejecutable resultante 
+   # en el directorio destino '/usr/local/bin'
    gcc /tmp/ls$1.c -o /usr/local/bin/ls$1
 
-   # Cambiar UGO y grupo del nuevo ejecutable para que solamente pueda ser
-   # utilizado por los ejecutivos
+   # Cambiar UGO y grupo del nuevo ejecutable para que solamente pueda 
+   # ser utilizado por los ejecutivos
    chgrp ejecutivos /usr/local/bin/ls$1
    chmod -v 4770 /usr/local/bin/ls$1
 
-   # Eliminar el codigo fuente temporal, ya que no es necesario en este punto
+   # Eliminar el codigo fuente temporal, ya que no es necesario en este
+   # punto
    rm /tmp/ls$1.c
 }
 
-# --------------------------------------------------------------------------------
+# -----------------------------------------------------------------------
 
 # FUNCION    : set_pam
-# DESCRIPCION: Modifica los ficheros /etc/pam.d/login y /etc/security/time.conf  para 
-#              activar en el sistema las restricciones de acceso a usuarios mediante PAM
+# DESCRIPCION: Modifica los ficheros /etc/pam.d/login y 
+#              /etc/security/time.conf  para activar en el sistema las
+#              restricciones de acceso a usuarios mediante PAM
 # ARGUMENTOS : Ninguno
 function set_pam {
-   # Invocar a sed para incluir el soporte para el control de tiempos en los ficheros
-   # de configuracion de las PAM, si este no habia sido establecido anteriormente
-   # sed -r 's/(account\s+required.*)+/account    required     pam_time.so\n&/m' -i.bkp /etc/pam.d/login
+   # Invocar a sed para incluir el soporte para el control de tiempos 
+   # en los ficheros de configuracion de las PAM, si este no habia sido
+   # establecido anteriormente
+   # sed -r 's/(account\s+required.*)+/account    required     
+   #                              pam_time.so\n&/m' -i.bkp /etc/pam.d/login
    if [[ -z `egrep "^\s*account\s+required\s+pam_time.so" /etc/pam.d/login` ]]
    then
       sed -r '0,/^\s*account.*/s/^\s*account.*/account    required     pam_time.so\n&/' -i.bkp /etc/pam.d/login
    fi
 
-   # Crear backup del fichero /etc/security/time.conf si no existia previamente
+   # Crear backup del fichero /etc/security/time.conf si no existia 
+   # previamente
    if [[ ! -x /etc/security/time.conf.bkp ]]
    then
       cp /etc/security/time.conf /etc/security/time.conf.bkp
    fi
-   # usu1 y usu2 pueden logearse por cualquier tty entre las 9:00 y las 15:00 independientemente del dia
+   # usu1 y usu2 pueden logearse por cualquier tty entre las 9:00 y las 
+   # 15:00 independientemente del dia
    echo "login;tty*;usu1|usu2;Al0900-1500" >> /etc/security/time.conf
-   # usu3 puede logearse por cualquier tty de lunes a jueves entre las 16:00 y las 21:00
+   # usu3 puede logearse por cualquier tty de lunes a jueves entre las 
+   # 16:00 y las 21:00
    echo "login;tty*;usu3;FrWk1600-2100" >> /etc/security/time.conf
-   # usu5 solo puede logearse por la tty5 los dias laborables entre las 9:00 y las 15:00
+   # usu5 solo puede logearse por la tty5 los dias laborables entre las 
+   # 9:00 y las 15:00
    # (En dos pasos, no esta muy claro el por que)
    echo "login;!tty5;usu5;*" >> /etc/security/time.conf
    echo "login;tty*;usu5;Wk0900-1500" >> /etc/security/time.conf
 }
 
-# --------------------------------------------------------------------------------
+# -----------------------------------------------------------------------
 # MAIN: Punto de entrada del script
-# --------------------------------------------------------------------------------
+# -----------------------------------------------------------------------
 
-# PASO 1: Crear los nuevos grupos. uno para cada proyecto y otro para los ejecutivos
+# PASO 1: Crear los nuevos grupos. uno para cada proyecto y otro para los
+# ejecutivos
 echo "[+] Creando grupos necesarios para los proyectos y ejecutivos..."
 groupadd aeropuerto
 groupadd cc
 groupadd parque
 groupadd ejecutivos
 
-# PASO 2: Crear los directorios necesarios de los proyectos, y asignarle el grupo
-#         primario correspondiente a los mismos
+# PASO 2: Crear los directorios necesarios de los proyectos, y asignarle 
+# el grupo primario correspondiente a los mismos
 # Opciones de mkdir:
-#   -v => Modo verbose (muestra un mensaje por pantalla por cada directorio creado)
-#   -p => Crea directorios padres si son necesarios (evita un 'mkdir /home/proyectos')
-#   -m XXXX => Establece los permisos especificados en el nuevo directorio, estilo chmod
+#   -v => Modo verbose (muestra un mensaje por pantalla por cada
+#         directorio creado)
+#   -p => Crea directorios padres si son necesarios (evita un 'mkdir
+#          /home/proyectos')
+#   -m XXXX => Establece los permisos especificados en el nuevo directorio,
+#          estilo chmod
 echo "[+] Creando directorios de proyectos..."
 mkdir -v -p -m 2770 /home/proyectos/aeropuerto
 chgrp aeropuerto /home/proyectos/aeropuerto
@@ -193,18 +212,21 @@ chgrp parque /home/proyectos/parque
 
 mkdir -v -p -m 1777 /home/proyectos/comun
 
-# PASO 3: Llamar a la funcion 'set_fstab' para permitir cuotas y ACL's en el sistema
+# PASO 3: Llamar a la funcion 'set_fstab' para permitir cuotas y ACL's en
+# el sistema
 echo "[+] Comprobando fichero /etc/fstab y ajustando parametros necesarios..."
 set_fstab
 
-# PASO 4: Establecer las ACL para adecuar los accesos a cada proyecto, de forma que cada
-#         nuevo fichero creado por un usuario del proyecto pueda ser automaticamente leido,
-#         modificado o borrado (esto ultimo mediante UGO) por otro usuario del mismo proyecto
+# PASO 4: Establecer las ACL para adecuar los accesos a cada proyecto, de 
+# forma que cada  nuevo fichero creado por un usuario del proyecto pueda
+# ser automaticamente leido, modificado o borrado (esto ultimo mediante
+# UGO) por otro usuario del mismo proyecto
 echo "[+] Estableciendo ACL's de proyectos"
 setfacl -d -m g:aeropuerto:rw /home/proyectos/aeropuerto
 setfacl -d -m g:cc:rw /home/proyectos/cc
 setfacl -d -m g:parque:rw /home/proyectos/parque
-# En el caso de '/home/proyectos/comun', se desea que este misma propiedad la tengan todos
+# En el caso de '/home/proyectos/comun', se desea que este misma propiedad
+# la tengan todos
 setfacl -d -m o::rw /home/proyectos/comun
 
 # PASO 5: Crear los usuarios y ejecutivos del sistema
@@ -220,16 +242,22 @@ create_user usu6 parque
 create_user ejec1 ejecutivos
 create_user ejec2 ejecutivos
 
-# PASO 6: Permisos de solo lectura para los ejecutivos, de forma que no puedan
-#         modificar ni borrar archivos de los proyectos a los que pertenecen
+# PASO 6: Permisos de solo lectura para los ejecutivos, de forma que no
+#         puedan modificar ni borrar archivos de los proyectos a los que
+#         pertenecen
 echo "[+] Estableciendo ACL's de ejecutivos..."
-# Ejecutivo 1: Notese que es necesario establecer ACLs tanto de acceso como por defecto
-# (flag '-d' en este ultimo caso), ya que si se establecen solo las de acceso, no se heredan
-# los permisos deseados en los nuevos ficheros y directorios que se creen a partir del
-# directorio raiz del proyecto; y en el caso contrario, esto es, que se establezcan solo
-# las ACLs por defecto, se aplicaran a todos los items dependientes del directorio raiz
-# pero NO se aplican al propio directorio, por lo que los ejecutivos seguirian sin disfrutar
-# de las nuevas reglas para acceder al directorio del proyecto correspondiente y sus items asociados
+# Ejecutivo 1: Notese que es necesario establecer ACLs tanto de acceso 
+#              como por defecto (flag '-d' en este ultimo caso), ya que
+#              si se establecen solo las de acceso, no se heredan los 
+#              permisos deseados en los nuevos ficheros y directorios
+#              que se creen a partir del directorio raiz del proyecto;
+#              y en el caso contrario, esto es, que se establezcan solo
+#              las ACLs por defecto, se aplicaran a todos los items
+#              dependientes del directorio raiz pero NO se aplican al
+#              propio directorio, por lo que los ejecutivos seguirian
+#              sin disfrutar de las nuevas reglas para acceder al 
+#              directorio del proyecto correspondiente y sus items
+#              asociados
 setfacl -m u:ejec1:rx /home/proyectos/aeropuerto
 setfacl -d -m u:ejec1:rx /home/proyectos/aeropuerto
 setfacl -m u:ejec1:rx /home/proyectos/parque
@@ -240,12 +268,14 @@ setfacl -d -m u:ejec2:rx /home/proyectos/aeropuerto
 setfacl -m u:ejec2:rx /home/proyectos/cc
 setfacl -d -m u:ejec2:rx /home/proyectos/cc
 
-# PASO 7: Crear los ficheros ejecutables 'ls<proyecto>' para los ejecutivos
+# PASO 7: Crear los ficheros ejecutables 'ls<proyecto>' para los
+#         ejecutivos
 echo "[+] Creando programas para ejecutivos..."
 create_ls aeropuerto
 create_ls cc
 create_ls parque
 
-# PASO 8: [Opcional] Establecer las restricciones de acceso mediante PAM login
+# PASO 8: [Opcional] Establecer las restricciones de acceso mediante
+#         PAM login
 echo "[+] Estableciendo restricciones PAM..."
 set_pam
