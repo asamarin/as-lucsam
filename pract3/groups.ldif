@@ -1,0 +1,96 @@
+dn: cn=ejecutivos,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: ejecutivos
+userPassword: {crypt}x
+gidNumber: 506
+memberUid: ejec1
+memberUid: ejec2
+
+dn: cn=aeropuerto,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: aeropuerto
+userPassword: {crypt}x
+gidNumber: 507
+memberUid: usu2
+memberUid: usu3
+memberUid: usu4
+memberUid: usu5
+
+dn: cn=cc,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: cc
+userPassword: {crypt}x
+gidNumber: 508
+memberUid: usu1
+memberUid: usu3
+memberUid: usu4
+memberUid: usu5
+
+dn: cn=parque,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: parque
+userPassword: {crypt}x
+gidNumber: 509
+memberUid: usu5
+memberUid: usu6
+
+dn: cn=usu1,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: usu1
+userPassword: {crypt}x
+gidNumber: 501
+
+dn: cn=usu2,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: usu2
+userPassword: {crypt}x
+gidNumber: 510
+
+dn: cn=usu3,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: usu3
+userPassword: {crypt}x
+gidNumber: 503
+
+dn: cn=usu4,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: usu4
+userPassword: {crypt}x
+gidNumber: 504
+
+dn: cn=usu5,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: usu5
+userPassword: {crypt}x
+gidNumber: 505
+
+dn: cn=usu6,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: usu6
+userPassword: {crypt}x
+gidNumber: 511
+
+dn: cn=ejec1,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: ejec1
+userPassword: {crypt}x
+gidNumber: 512
+
+dn: cn=ejec2,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: ejec2
+userPassword: {crypt}x
+gidNumber: 513
+
