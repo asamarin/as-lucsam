@@ -1,0 +1,15 @@
+dn: dc=aso11,dc=org
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+o: aso11
+
+dn: ou=People,dc=aso11,dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Group,dc=aso11,dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: Group
