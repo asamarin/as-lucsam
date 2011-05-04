@@ -2,7 +2,7 @@
 
 Configurar nueva conexion de red en VirtualBox:
 
--> Cambiar tipo de red de NAT a Red interna
+-> Cambiar tipo de red de NAT a 'Red interna' en ambas maquinas virtuales (servidor y cliente ligero)
 
 Configurar conexion entre cliente y servidor (en Linux):
 
@@ -23,3 +23,33 @@ Configurar conexion entre cliente y servidor (en Linux):
    En especial, la 'cn=config' y 'olcdatabase{1}bdb.ldif'
    Arrancar servicio slapd
    A partir de ahi, modificar con 'ldapadd', 'ldapmodify', etc...
+
+-> Instalar OpenLDAP:
+
+   yum search openldap  (para ver opciones)
+
+   yum install openldap-servers -> Servidor
+   yum install openldap-clients -> Cliente
+
+-> Configurar /etc/openldap/cn=config/olcDatabase={0}config.ldif:
+
+   Añadir olcRootPW: Password generada con 'slappasswd -s lredes' (Se puede appendear con echo para automatizar)
+
+-> Configurar /etc/openldap/cn=config/olcDatabase={1}bdb.ldif:
+
+   Modificar olcSuffix: dc=aso11,dc=org
+             olcRootDN: cn=Manager,dc=aso11,dc=org
+
+   Añadir olcRootPW: Password generada con 'slappasswd -s lredes' (Se puede appendear con echo para automatizar)
+     
+-> Configurar /etc/openldap/cn=config/olcDatabase={2}monitor.ldif:
+
+   (Todo esto en la misma linea, esta separado por claridad)
+   Modificar olcAccess: {0}to *
+                        by dn.base='cn=Manager,dc=aso11,dc=org' write
+                        by * none
+
+-> Instalar las migration_tools:
+   
+   Descargar el tar.gz directamente desde la web oficial, porque el paquete que esta en el repositorio 
+   no proporciona los comandos 'migrate_*' esperados
