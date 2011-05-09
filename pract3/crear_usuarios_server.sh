@@ -28,7 +28,7 @@ mkdir -m 2770 /export/proyectos/portales
 chgrp portales /export/proyectos/portales
 
 setfacl -d -m g:videojuegos:rwx /export/proyectos/videojuegos
-setfacl -d -m g:portales:rwx /export/proyectos/acl
+setfacl -d -m g:portales:rwx /export/proyectos/portales
 
 create_user irene videojuegos
 create_user laura portales
