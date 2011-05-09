@@ -10,6 +10,8 @@ Configurar conexion entre cliente y servidor (en Linux):
    ifconfig eth1 192.168.0.20 (en el servidor)
    ifconfig eth1 192.168.0.30 (en el cliente)
 
+   ifconfig eth1 up (en ambos)
+
    Hacer ping para comprobar que esta todo correcto
 
 -> Configurando LDAP:
@@ -53,3 +55,19 @@ Configurar conexion entre cliente y servidor (en Linux):
    
    Descargar el tar.gz directamente desde la web oficial, porque el paquete que esta en el repositorio 
    no proporciona los comandos 'migrate_*' esperados
+
+
+
+
+* Se han generado con estas herramientas una serie de ficheros .ldif a partir de los siguientes ficheros del sistema:
+- /etc/passwd
+- /etc/groups
+
+* Previmanete se creado la entrada en el direcotrio LDAP referente a la organización, y las OUs obligatorias ( People y Group ) para la gestión de usuarios y grupos.
+
+
+* Se crean los usuarios en el servidor de manera local, y se le asignana a los grupos de cada proyecto. Además, se establecen los permisos de los directorios de los proyecto y los de la carpeta /export/comun. (Ver script crear_usuaiors_server.sh)
+
+
+
+
