@@ -59,15 +59,22 @@ Configurar conexion entre cliente y servidor (en Linux):
 
 
 
-* Se han generado con estas herramientas una serie de ficheros .ldif a partir de los siguientes ficheros del sistema:
-- /etc/passwd
-- /etc/groups
+-> Se han generado con estas herramientas una serie de ficheros .ldif a partir de los siguientes ficheros del sistema:
+* /etc/passwd
+* /etc/groups
 
-* Previmanete se creado la entrada en el direcotrio LDAP referente a la organización, y las OUs obligatorias ( People y Group ) para la gestión de usuarios y grupos.
+-> Previmanete se creado la entrada en el direcotrio LDAP referente a la organización, y las OUs obligatorias ( People y Group ) para la gestión de usuarios y grupos.
 
 
-* Se crean los usuarios en el servidor de manera local, y se le asignana a los grupos de cada proyecto. Además, se establecen los permisos de los directorios de los proyecto y los de la carpeta /export/comun. (Ver script crear_usuaiors_server.sh)
+-> Se crean los usuarios en el servidor de manera local, y se le asignana a los grupos de cada proyecto. Además, se establecen los permisos de los directorios de los proyecto y los de la carpeta /export/comun. (Ver script crear_usuaiors_server.sh)
 
+
+-> Antes de añadir las entradas de usuarios y grupos a la base de datos, previamente se ha arrancado el servicio slapd:
+
+   # service slapd start
+
+
+-> A continuación, se generan los ficheros .ldif para insetar los usarios clara, maria, e irene, e insertar los grupos videojuegos y portal en el directorio LDAP. Esto se realiza mediante las herramientas migrate_passwd.pl y migrate_group.pl que pertenecen al paquete de utillidades 'MigrationTools-47'.
 
 
 
