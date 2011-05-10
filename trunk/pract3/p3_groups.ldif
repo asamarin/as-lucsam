@@ -1,0 +1,39 @@
+dn: cn=videojuegos,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: videojuegos
+userPassword: {crypt}x
+gidNumber: 514
+memberUid: clara
+memberUid: irene
+
+dn: cn=portales,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: portales
+userPassword: {crypt}x
+gidNumber: 515
+memberUid: clara
+memberUid: laura
+
+dn: cn=irene,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: irene
+userPassword: {crypt}x
+gidNumber: 516
+
+dn: cn=laura,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: laura
+userPassword: {crypt}x
+gidNumber: 517
+
+dn: cn=clara,ou=Group,dc=aso11,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: clara
+userPassword: {crypt}x
+gidNumber: 518
+
