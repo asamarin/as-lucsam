@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function create_user {
-   useradd -m -d /export/casa/$1 -U -s /bin/bash -G $2 $1
+   useradd -m -d /import/casa/$1 -U -s /bin/bash -G $2 $1
 
    # Cambiar la passwohrd del nuevo usuario (igual que su username)
    echo $1:$1 | chpasswd
@@ -20,8 +20,8 @@ groupadd videojuegos
 groupadd portales
 
 mkdir -p /export/casa
-mkdir -p -m 0744 /export/comun
-mkdir -p -m 0700 /export/proyectos
+mkdir -p -m 0755 /export/comun
+mkdir -p -m 0755 /export/proyectos
 mkdir -m 2770 /export/proyectos/videojuegos
 chgrp videojuegos /export/proyectos/videojuegos
 mkdir -m 2770 /export/proyectos/portales

@@ -1,4 +1,8 @@
 
+-------------------------------------
+Configuración previo de las máquinas
+-------------------------------------
+
 
 Configurar nueva conexion de red en VirtualBox:
 
@@ -56,7 +60,9 @@ Configurar conexion entre cliente y servidor (en Linux):
    Descargar el tar.gz directamente desde la web oficial, porque el paquete que esta en el repositorio 
    no proporciona los comandos 'migrate_*' esperados
 
-
+----------------------------
+ Autentificación por LDAP
+---------------------------
 
 
 -> Se han generado con estas herramientas una serie de ficheros .ldif a partir de los siguientes ficheros del sistema:
@@ -76,5 +82,37 @@ Configurar conexion entre cliente y servidor (en Linux):
 
 -> A continuación, se generan los ficheros .ldif para insetar los usarios clara, maria, e irene, e insertar los grupos videojuegos y portal en el directorio LDAP. Esto se realiza mediante las herramientas migrate_passwd.pl y migrate_group.pl que pertenecen al paquete de utillidades 'MigrationTools-47'.
 
+
+-> Se instalan los siguientes paquetes en el cliente para al acceso de este al directorio LDAP:
+
+   * pam_ldap
+   * nss_ldap
+   * authconfig
+
+-> El asistente del authconfig-tui se han activado los siguientes elementos:
+
+   * Utilizar LDAP
+   * Utilizar contraseñas ocultas
+   * Utilizar autentificación LDAP
+
+   En los parámetros LDAP se le indica que la dirección del servidor es ldap://192.168.0.20/ , y que el nombre distinguido de base es dc=aso11,dc=org .
+
+
+-> Se procede a detener el firewall del servidor para permitir el acceso a los clientes a falta de configurarlo. Por último, se configura el fichero /etc/nsswitch.conf para inidicar que la máquina cliente solicite al servidor ldap la información de usuario primero y luego de forma local. Ahora es posible loguearse contra el servidor ldap con los usuarios irene, clara, y laura.
+
+---------------------
+         NFS
+---------------------
+
+
+
+-> De vuelta al servidor, se procede a arrancar el servicio nfs. 
+
+-> A continuación, se configura el fichero /etc/exports para que cada usuario(de la red interna) acceda
+ a su directorio de conexión alojado en el directorio /export/casa/ del servidor, que todos los usuarios de la red interna puedan 
+ acceder al directorios  de proyecto, y que cualquiera pueda acceder al directorio comun. 
+
+-> Luego, se activan los cambios con exportfs y se pasa a montar de forma estática el directorio /export/ del servidor, en la ruta /import/
+ de la máquina cliente. Previamente se ha instalado el nfs-util para la gestión del montaje de ficheros nfs en el cliente.
 
 
