@@ -12,7 +12,7 @@ shadowWarning: 7
 loginShell: /bin/bash
 uidNumber: 509
 gidNumber: 516
-homeDirectory: /home/irene
+homeDirectory: /import/casa/irene
 
 dn: uid=laura,ou=People,dc=aso11,dc=org
 uid: laura
@@ -28,7 +28,7 @@ shadowWarning: 7
 loginShell: /bin/bash
 uidNumber: 510
 gidNumber: 517
-homeDirectory: /home/laura
+homeDirectory: /import/casa/laura
 
 dn: uid=clara,ou=People,dc=aso11,dc=org
 uid: clara
@@ -44,5 +44,5 @@ shadowWarning: 7
 loginShell: /bin/bash
 uidNumber: 511
 gidNumber: 518
-homeDirectory: /home/clara
+homeDirectory: /import/casa/clara
 
