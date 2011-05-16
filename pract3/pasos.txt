@@ -116,3 +116,15 @@ Configurar conexion entre cliente y servidor (en Linux):
  de la máquina cliente. Previamente se ha instalado el nfs-util para la gestión del montaje de ficheros nfs en el cliente.
 
 
+---------------------
+        AUTOFS
+---------------------
+
+
+-> Se crean los scripts autofs.ldif, modifica el esquema LDAP para activar el automontaje, y automounttree.ldif, que se encarga de montar las carpetas de usuario, de proyectos, y la carpeta comun en la máquina local al autentificarse en el servidor LDAP.
+
+-> Se modifica el fichero /etc/nswitch.conf para indircar que el servicio automount pregunte primero al servidor ldap y luego en local (files)
+
+-> A continuación, solo queda iniciar el servicio autofs en el servidor.
+
+
