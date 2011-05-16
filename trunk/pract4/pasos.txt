@@ -1,0 +1,41 @@
+- Se crean 3 unidades organizativas, una para cada departamento: Contabilidad, RRHH y Comercial. A su vez, Contabilidad se compone de otras
+  2 unidades organizativas: Compras y Ventas.
+
+- En la OU de Contabilidad, click derecho -> "Delegate control" para asignar a un usuario de esa subdivision la gestion de los usuarios
+  pertenecientes a la misma (Tambien lo hicimos de otra manera, a traves de click derecho en Contabilidad -> Pestaña "Managed By")
+
+- Se crean las carpetas compartidas C:\rootdfs, C:\temp\unidad1, C:\foo\unidad2 para simular el DFS
+
+- En Administrative Tools -> Distributed File System se configura la carpeta raiz del DFS, en nuestro caso \\ORD11\rootdfs y se le linkan
+  las carpetas compartidas mencionadas anteriormente, con los nombres de "Empleados" y "Ejecutivos"
+
+- Se crea un script en SYSVOL que monta la unidad \\ORD11\rootdfs en T: (para asignar a una GPO)
+
+- Para la GPO de las passwords (se aplica al dominio): Computer config -> Windows Settings -> Security Settings -> Account Policies ->
+  Password Policies -> Maximum password age y Minimum password length
+
+- GPO de que no aparezca el menu "File" en el explorador de Windows: User Configuration -> Administrative Templates -> Windows Components -<
+  Windows Explorer -> Remove File menu from Windows Explorer -> Enabled
+
+- Para las GPO de Contabilidad (se aplican sobre esta OU):
+
+   - Mapear unidad T en el DFS: User Configuration -> Windows Settings -> Scripts (LogOn/LogOff) -> Logon -> Añadir el script en SYSVOL que monta T:
+   - User Configuration -> Administrative Templates -> Windows Components ->  Windows Explorer -> Hide these specified drives in My Computer -> 
+     Enabled -> En la lista seleccionar "Restrict A, B and C drives only"
+
+- Se especifica que las GPO a nivel de contabilidad se excluyen de aplicarsele al usuario que administra en esta OU, mediante click derecho en la OU ->
+  Properties -> Group Policy -> click sobre la GPO en cuestion (hay que hacerlo en todas, en nuestro caso) -> Properties -> Pestaña Security -> Añadir
+  al susodicho usuario -> Pinchar sobre el y marcar la casilla "Deny" en "Apply Group Policy"
+
+- Para quitar el boton "Ejecutar" del menu Inicio para la gente de RRHH:  User Configuration -> Administrative Templates -> Start Menu and Task Bar -> 
+  Remove Run Menu from Start Menu -> Enabled.
+
+- Para limitar el tamaño del perfil a 10MB: User Configuration -> Administrative Templates -> System -> User profiles -> Limit profile size ->
+  Enabled y setear "Max profile size" a 10240 KB
+
+- Para delegar el control de directivas de grupo a un usuario de RRHH, lo mismo que arriba pero se le chequea solo la opcion de administrar directivas de grupo
+
+- Se reorganizan los usuarios creando grupos locales en cada OU, a los cuales se le asignan los permisos y las GPO. Luego se crean grupos globales en la
+  carpeta Users, donde se agregan a los usuarios, y a su vez los grupos globales son añadidos dentro de los grupos locales (para la gestion de permisos NTFS).
+
+- Cuotas: Computer Configuration -> Administrative Templates -> System -> Disk Quotas -> Enable disk quotas -> Enabled; Default quota limit and warning level -> 100MB
