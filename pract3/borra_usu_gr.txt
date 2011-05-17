@@ -1,0 +1,10 @@
+uid=irene,ou=People,dc=aso11,dc=org
+uid=clara,ou=People,dc=aso11,dc=org
+uid=laura,ou=People,dc=aso11,dc=org
+cn=videojuegos,ou=Group,dc=aso11,dc=org
+cn=portales,ou=Group,dc=aso11,dc=org
+cn=irene,ou=Group,dc=aso11,dc=org
+cn=laura,ou=Group,dc=aso11,dc=org
+cn=clara,ou=Group,dc=aso11,dc=org
+ou=Group,dc=aso11,dc=org
+ou=People,dc=aso11,dc=org

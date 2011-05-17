@@ -1,0 +1,7 @@
+/export/casa/irene 192.168.0.*(rw)
+/export/casa/clara 192.168.0.*(rw)
+/export/casa/laura 192.168.0.*(rw)
+/export/proyectos/portales 192.168.0.*(rw)
+/export/proyectos/videojuegos 192.168.0.*(rw)
+/export/comun *(ro)
+
