@@ -72,7 +72,7 @@ Configurar conexion entre cliente y servidor (en Linux):
 -> Previmanete se creado la entrada en el direcotrio LDAP referente a la organización, y las OUs obligatorias ( People y Group ) para la gestión de usuarios y grupos.
 
 
--> Se crean los usuarios en el servidor de manera local, y se le asignana a los grupos de cada proyecto. Además, se establecen los permisos de los directorios de los proyecto y los de la carpeta /export/comun. (Ver script crear_usuaiors_server.sh)
+-> Se crean los usuarios en el servidor de manera local, y se asignan los usuarios a los grupos de cada proyecto. Además, se establecen los permisos de los directorios de los proyecto y los de la carpeta /export/comun. (Ver script crear_usuarios_server.sh, comentado) 
 
 
 -> Antes de añadir las entradas de usuarios y grupos a la base de datos, previamente se ha arrancado el servicio slapd:
@@ -98,22 +98,29 @@ Configurar conexion entre cliente y servidor (en Linux):
    En los parámetros LDAP se le indica que la dirección del servidor es ldap://192.168.0.20/ , y que el nombre distinguido de base es dc=aso11,dc=org .
 
 
--> Se procede a detener el firewall del servidor para permitir el acceso a los clientes a falta de configurarlo. Por último, se configura el fichero /etc/nsswitch.conf para inidicar que la máquina cliente solicite al servidor ldap la información de usuario primero y luego de forma local. Ahora es posible loguearse contra el servidor ldap con los usuarios irene, clara, y laura.
+-> Se procede a detener el firewall del servidor para permitir el acceso a los clientes a falta de configurarlo. 
+
+-> Por último, se configura el fichero /etc/nsswitch.conf para inidicar que la máquina cliente solicite al servidor ldap la información de usuario primero y luego de forma local. 
+
+-> Ahora es posible loguearse contra el servidor ldap con los usuarios irene, clara, y laura.
 
 ---------------------
          NFS
 ---------------------
 
-
+-> En el cliente se crean los puntos de monaje para los directorios. ??
 
 -> De vuelta al servidor, se procede a arrancar el servicio nfs. 
 
 -> A continuación, se configura el fichero /etc/exports para que cada usuario(de la red interna) acceda
  a su directorio de conexión alojado en el directorio /export/casa/ del servidor, que todos los usuarios de la red interna puedan 
- acceder al directorios  de proyecto, y que cualquiera pueda acceder al directorio comun. 
+ acceder a los directorios de proyectos, y que cualquiera pueda acceder al directorio comun. 
 
 -> Luego, se activan los cambios con exportfs y se pasa a montar de forma estática el directorio /export/ del servidor, en la ruta /import/
- de la máquina cliente. Previamente se ha instalado el nfs-util para la gestión del montaje de ficheros nfs en el cliente.
+ de la máquina cliente. 
+ 
+ 
+ Previamente se ha instalado el nfs-util para la gestión del montaje de ficheros nfs en el cliente.
 
 
 ---------------------
@@ -123,7 +130,7 @@ Configurar conexion entre cliente y servidor (en Linux):
 
 -> Se crean los scripts autofs.ldif, modifica el esquema LDAP para activar el automontaje, y automounttree.ldif, que se encarga de montar las carpetas de usuario, de proyectos, y la carpeta comun en la máquina local al autentificarse en el servidor LDAP.
 
--> Se modifica el fichero /etc/nswitch.conf para indircar que el servicio automount pregunte primero al servidor ldap y luego en local (files)
+-> Se modifica el fichero /etc/nsswitch.conf para indircar que el servicio automount pregunte primero al servidor ldap y luego en local (files)
 
 -> A continuación, solo queda iniciar el servicio autofs en el servidor.
 

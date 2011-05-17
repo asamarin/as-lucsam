@@ -20,6 +20,16 @@
 #groupadd portales
 
 mkdir -p /export/casa
+mkdir -p /export/casa/irene
+chmod 0770 /export/casa/irene
+chgrp 516 /export/casa/irene
+mkdir -p /export/casa/clara
+chmod 0770 /export/casa/clara
+chgrp 518 /export/casa/clara
+mkdir -p /export/casa/laura
+chmod 0770 /export/casa/laura
+chgrp 517 /export/casa/laura
+
 mkdir -p -m 0755 /export/comun
 mkdir -p -m 0755 /export/proyectos
 mkdir -m 2770 /export/proyectos/videojuegos
