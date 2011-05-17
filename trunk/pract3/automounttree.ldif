@@ -2,12 +2,11 @@ dn: ou=auto.master,dc=aso11,dc=org
 ou: auto.master
 objectClass: top
 objectClass: automountMap
-  
+
 dn: cn=/import/casa,ou=auto.master,dc=aso11,dc=org
 cn: /import/casa
-objectClass: top
 objectClass: automount
-automountInformation: ldap:ou=auto.home,ou=automount,ou=admin,dc=aso11,dc=org --timeout=60 --ghost
+automountInformation: ldap 192.168.0.20:ou=auto.home,dc=aso11,dc=org
 
 dn: ou=auto.home,dc=aso11,dc=org
 ou: auto.home
@@ -16,20 +15,17 @@ objectClass: automountMap
 
 dn: cn=irene,ou=auto.home,dc=aso11,dc=org
 cn: irene
-objectClass: top
 objectClass: automount
-automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 nfs.aso11.org:/export/home/irene
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/home/irene
 
 dn: cn=laura,ou=auto.home,dc=aso11,dc=org
 cn: laura
-objectClass: top
 objectClass: automount
-automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 nfs.aso11.org:/export/home/laura
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/home/laura
 
 dn: cn=clara,ou=auto.home,dc=aso11,dc=org
 cn: clara
-objectClass: top
 objectClass: automount
-automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 nfs.aso11.org:/export/home/clara
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/home/clara
 
 # FALTAN las entradas de las carpetas proyectos y comun
