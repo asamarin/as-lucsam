@@ -1,0 +1,219 @@
+
+
+*****----  Práctica2: Usuarios y protección en windows 2000 ----*****
+
+
+
+CONFIGURACIÓN PREVIA
+
+Como pasos previos a la resolución de esta práctica hubo que realizar una serie procesos previos para configurar correctamente el servidor W2k3 d
+
+1.- Establecer el nombre de dominio del servidor a aso11.org
+2.- Cambiar la IP DNS primaria a 10.0.2.15
+3.- Instalar el servicio DNS en el servidor a través de los componentes de Windows
+4.- Herramientas administrativas -> DNS -> Agregar zonas en resolucion forward y reverse
+FORWARDING(Delegar resolucion de nmombres)
+nslookup
+5.- Instalar el Active Directory, y activarlo mediante el comando dcpromo.
+
+
+ORGANIZACIÓN DEL DOMINIO
+
+
+Se han definido n grupo global ejecutivos y seis grupos globales, un directores y un participantes por cada proyecto, donde insertar a 
+los usuarios de la organización. Luego al grupo local ejecutivos cuyo único miembro es el grupo global del mismo nombre se le asignaran
+los permisos de acceso a los recursos necesarios.
+Para mantener un cierto orden en la aplicación de permisos y futuras políticas de grupos, se han definido tres unidades organizativas
+( auditorio, aeropuerto y parque ). Dentro de cada una de las OU, se han creado los grupos locales ( directores y participantes )
+cuyo único miembro son los grupos definidos previamente en Users correspondientes a cada proyecto.
+La finalidad que esto tiene es implementar una estructura de directorio adaptada a posibles ampliaciones del esquema de la organización.
+En el caso de que nuestra organización conste de varios dominios y no solo de uno, como es el caso que hemos tratado, será posible estrabler
+permisos a recursos locales, y dar acceso a todos los miembros de la organización que hayan sido definidos en los grupos globales.
+
+
+RESOLUCIÓN DE REQUISITOS DE LA ORGANIZACIÓN
+
+Se pasa a continuación a listar las exigencias a implementar en el Active Directory y seguidamente la ruta de ventanas/pestañas seguida para
+configurarlos, o una pequeña descripción de los pasos seguidos para esta tarea:
+
+a) Sistema
+
+	* Cualquier usuario debe poder apagar el sistema
+
+Admin Tools -> Default Domain Security Settings -> Local Policies -> User Rights Assignment -> Shut down the system
+
+	* Los usuarios tienen restringidas las horas de acceso al sistema
+
+Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Properties -> Pestaña account -> Logon hours. También se ha optado por automatizar esta tarea tediosa mediante un script .vbs que invoca al comando 'net user'. Ver anexos.
+
+
+b) Contraseñas
+
+	* A fin de facilitar la gestión, asignar como contraseña el nombre del usuario
+Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Reset password
+
+	* Los usuarios deben cambiar las contraseñas cada tres meses
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Maximum password age -> 90 days
+
+	* Los usuarios no pueden cambiar las contraseñas hasta 2 semanas después de haberla cambiado
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Minimum password age -> 14 days
+
+	* No se permiten contraseñas en  blanco. Longitud mínima: 4 caracteres
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Minimum password length -> 4 characters
+
+	* La nueva contraseña no debe coincidir con las dos últimas introducidas por el usuario
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Password Policy -> Enforce password history -> 2 passwords remembered
+
+	* Si se producen 4 intentos de autenticación fallidos a una cuenta de usuario en un intervalo de 10 minutos, ésta debe quedar permanentemente bloqueada. 
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Account lockout threshold -> 4 invalid logon attempts
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Account lockout duration -> 0 (Permancece bloqueada hasta que el administrador intervenga)
+Admin Tools -> Default Domain Security Settings -> Account Policies -> Account Lockout Policy -> Reset account lockout counter after -> 10 minutes
+
+	* Deben quedar registrados los intentos fallidos de entrada en el sistema
+
+Admin Tools -> Default Domain Security Settings -> Local Policies -> Audit Policy -> Audit account logon events -> Define these policy settings -> Chequear Failure
+Se realiza el mismo paso en 'Default Domain Controler Security Settings' para evitar que entren en conflicto las politicas seguridad
+del dominio y las polícitas de seguridad del controlador de dominio.
+
+
+c) Directorio privado de los usuarios
+
+Cada usuario debe disponer de un directorio propio de conexión con las siguientes restricciones:
+
+	* Todo usuario debe disponer de un directorio propio a partir del directorio \home del servidor, cuyo nombre coincida con el de la cuenta del usuario. El usuario
+podrá acceder automáticamente a este directorio a partir de la unidad n: desde cualquier máquina del dominio.
+	* En este directorio, el usuario debe tener control total
+	* El resto de  los usuarios no podrá tener ningún tipo de acceso sobre este directorio
+
+Crear directorio "C:\home" -> (Click derecho) -> Sharing and security -> Pestaña Sharing -> Share this folder -> Permissions -> Full control for Everyone (permisos de red)
+Otra vez click derecho -> Propiedades -> Pestaña security -> Advanced -> Desmarcar "Allow inheritable permissions..." -> Remove en el cuadro de dialogo
+Admin Tools -> Active Directory Users and Computers -> (Click derecho sobre el usuario en cuestion) -> Properties -> Pestaña Profile -> Home folder -> Connect N: to \\ORD1\home\empleX 
+(No hace falta crear la carpeta del empleado previamente)
+
+d) Proyectos de la organización. La organización tiene en marcha diversos proyectos. Éstos han de cumplir:
+
+    *  Cada proyecto dispondrá de un directorio para almacenar la información relativa
+       al mismo bajo el directorio \proyectos. Cada usuario podrá acceder
+       automáticamente a los proyectos en los que participe a partir de las unidades p:,
+       q:,... desde cualquier máquina del dominio.
+
+Se crea una carpeta 'proyectos' en C:\ , y se le da full control a everyone en permisos de red. En los permisos NTFS
+de 'proyectos' se permite acceso exclusivamente a los administradores, y se desactiva la herencia de permisos como 
+con la carpeta 'home'. Dentro de la carpeta 'proyectos', se crean dentro tres
+carpetas, una por proyecto. Se le da acceso por NTFS a cada unidad organizativa responsable de su proyecto.
+Esto es automatizable mediante el uso del script xcacls.vbs para los permisos NTFS y el comando 'net use' para los permisos de red.
+
+    *  Todos los usuarios que participan en un proyecto deben tener la posibilidad de
+       leer y modificar los archivos que forman parte del proyecto
+
+Se agregan los participantes y directores de cada proyecto como grupos privilegiados en sus respectivas carpetas de proyectos. A los participantes se les da permiso de 'Modificar' y 'Lectura'.
+
+
+    *  Los usuarios no podrán crear ni borrar archivos del proyecto. Esta función la
+       realizará el director del mismo.
+
+Dentro de las propiedades de cada proyecto > Security > Advanced > Pinchar sobre participantes > Edit. 
+
+Se crearan dos permisos por cada participante y carpeta de proyecto. Para los permisos sobre las carpetas y subcarpetas se selecciona
+en 'Apply onto', 'This folder and subfolders', y se desmarca 'Create Folder' y 'Create Files' y ambos 'Delete ...' 
+('Write atributes' y "Read Attributes', 'List Folder/Read Data', 'Traverse Folder/Execute File' se dejan marcados).
+
+Para los permisos sobre archivos, se selecciona 'Files only' en 'Apply onto', y se repiten los permisos anteriores pero
+marcando ahora 'Write Data' y 'Append Data'.
+
+Para lo de los proyectos:
+
+En C:\Windows\SYSVOL\sysvol\aso11.org\scripts (shared folder) se guarda el siguiente script batch
+
+unidades_proyectos.bat:
+-----------------------------------------------------------
+net use p: \\ord11\proyectos\auditorio
+net use q: \\ord11\proyectos\aeropuerto
+net use r: \\ord11\proyectos\parque
+-----------------------------------------------------------
+
+Para cada usuario se repiten los mismo pasos:
+
+Active Directory Users and Computers -> Click Derecho sobre el usuario -> properties -> pestaña -> profile -> logon script -> unidades_proyectos.bat (sin rutas, solo nombre y extension)
+
+e) Usuarios de la organización
+    *  Los usuarios implicados en los proyectos tendrán restringida la hora de acceso al
+       sistema
+
+Está hecho en el punto a) 2.
+
+    *  Les debe ser asignado un perfil flotante que no puedan modificar
+
+Active Directory Users and Computers > Users > Seleccionar un usuario > Propiedades > Profile >
+En 'Profile Path' escribir \\ORD11\home\usuXXX donde usuXXX es el nombre del usuario seleccionado.
+Se recomienda copiar el perfil desde Start -> Control Panel -> System -> Advanced -> User Profiles -> Settings ->
+Copy To -> \\ORD11\home\usuXXX y darle permisos debajo en 'Permitted to use'
+Para que no puedan modificarlo, cambiar en \\ORD11\home\usuXXX (o en la carpeta local de Documents and Settings) la extension
+del fichero 'ntuser.dat' a 'ntuser.man', de forma que el perfil se convierte en mandatorio
+
+
+e) Directores de los proyectos. Cada proyecto tiene al menos un director.
+
+    *  Tienen control total sobre los archivos del proyecto que dirigen
+
+Para los directores, dentro de las propiedades de cada proyecto > Security > Pinchar sobre director >
+y marcar 'Full Control', para así dar permisos totales a los directores de su correspondiente proyecto.
+
+
+f) Ejecutivos de la organización
+
+Se crea un nuevo grupo ejecutivos, y se le asignan los tres ejecutivos.
+
+    *   Podrán acceder a cualquiera de los directorios de los proyectos en curso
+
+Crear nuevo script en SYSVOL y mapear 'p:' a 'C:\proyectos', asignarselo a los ejecutivos en el campo 'Logon script' como esta explicado arriba
+
+    *   Pueden leer la información de estos proyectos
+
+Desde la carpeta proyectos se añade un nuevo permiso de lectura y ejecución para el grupo ejecutivos.
+
+    *   No pueden alterar dicha información
+
+En el punto anterior, al especificar los permisos del grupo ejecutivos sobre la carpeta proyectos, se le indica que no puedan cambiar
+cambiar los permisos de dicha carpeta.
+
+
+g) Resto de usuarios
+    *   No dispondrán de ningún derecho de acceso a los directorios de los proyectos
+
+Por defecto el resto de usuarios no tienen permiso alguno para acceder a las carpetas compartidos, puesto que no se han dado permisos Everyone
+a ningun recurso de los administrados. Esta opción es preferible a denegar explícitamente el acceso a todos los usuarios ajenos a la organización, que sería una opción menos eficiente y más propensa a dar problemas.
+
+--------------------------------------
+
+Situación actual de la organización
+   * Existen actualmente 3 proyectos en ejecución: auditorio, aeropuerto y parque
+
+Ya se ha indicado como realizarlo en las secciones previas.
+
+   * Relacionados con estos proyectos, la empresa dispone de 10 empleados, 5 en el
+     turno de mañana (08:00-15:00) (emple1-emple5) y 5 en el grupo de tarde
+     (14:00-21:00) (emple6-emple10).
+
+Ver como cambiar los horarios de conexion mas arriba.
+
+   * Los empleados 1, 3, y 5 han sido contratados temporalmente (6 meses)
+
+Active Directory Users and Computers -> Click derecho sobre el usuario en cuestion -> Properties -> Pestaña 'Account' -> Account expires -> Seleccionar 'End of:' y marcar 6 meses mas adelante en el calendario desplegable. Este punto está automatizado en un script mediante 'net user'. Ver scripts (config_cuentas.vbs).
+
+   * Hay 3 ejecutivos en la organización: ejec1, ejec2 y ejec3.
+
+Ya se ha indicado como realizarlo en las secciones previas (se creo un nuevo grupo 'Ejecutivos' dentro de Users y se metieron los
+3 ejecutivos ahi, para manejarlos a la vez)
+
+
+------ NOTA -------
+
+Para los perfiles:
+
+Crear un usuario por defecto, loguearse, copiar su perfil a alguna carpeta compartida (C:\netlogon\default por ejemplo), cambiar en esa carpeta la extensión del archivo ntuser.dat a ntuser.man, para indicar que sea un perfil mandatorio. En el active directory users and computers,
+seleccionar todos los usuarios de una vez y hacer click derecho -> properties -> account -> cambiar 'profile path' y hacer que apunten todos al perfil de este usuario ('\\ORD11\default'). Los cambios en el perfil del usuario se pueden automatizar con el comando 'net user'. Ver scripts (config_cuentas.vbs)
+
+
+
+
