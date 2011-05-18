@@ -140,39 +140,6 @@ En la práctica, la contraseña de cada usuario coincidirá con el nombre de
 \end_layout
 
 \begin_layout Standard
-En cuanto a los requisitos de los directorios de conexión de los usuarios
- y sus permisos asociados:
-\end_layout
-
-\begin_layout Enumerate
-
-\emph on
-Todo usuario del sistema debe poseer un subdirectorio del directorio /home
- cuyo nombre debe coincidir con el de la cuenta del usuario.
-\end_layout
-
-\begin_layout Enumerate
-
-\emph on
-En este directorio, el usuario debe poder crear y borrar ficheros y directorios,
- pero no debe poder modificar los permisos de su directorio de conexión.
-\end_layout
-
-\begin_layout Enumerate
-
-\emph on
-Ningún otro usuario del sistema podrá acceder a dicho directorio ni a su
- contenido.
-\end_layout
-
-\begin_layout Enumerate
-
-\emph on
-Cada usuario tendrá una cuota de disco de 50 Mb que podrá sobrepasar temporalmen
-te (2 días).
-\end_layout
-
-\begin_layout Standard
 Se ha implementado una función 
 \emph on
 
@@ -308,6 +275,39 @@ chpasswd
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+En cuanto a los requisitos de los directorios de conexión de los usuarios
+ y sus permisos asociados:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Todo usuario del sistema debe poseer un subdirectorio del directorio /home
+ cuyo nombre debe coincidir con el de la cuenta del usuario.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+En este directorio, el usuario debe poder crear y borrar ficheros y directorios,
+ pero no debe poder modificar los permisos de su directorio de conexión.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Ningún otro usuario del sistema podrá acceder a dicho directorio ni a su
+ contenido.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Cada usuario tendrá una cuota de disco de 50 Mb que podrá sobrepasar temporalmen
+te (2 días).
 \end_layout
 
 \begin_layout Standard
@@ -478,8 +478,8 @@ aseguramos que el usuario tenga completo acceso a su directorio de conexión,
 \end_layout
 
 \begin_layout Standard
-En cuanto al punto 4 de los requisitos referente a las cuotas de usuario,
- se ha utilizado una variante automatizada del comando 
+En cuanto al requisito referente a las cuotas de usuario, se ha utilizado
+ una variante automatizada del comando 
 \emph on
 edquota
 \emph default
@@ -594,12 +594,12 @@ S+
 \backslash
 s+
 \backslash
-S+/ 
+S+/
 \end_layout
 
 \begin_layout Plain Layout
 
-			&,usrjquota=aquota.user,jqfmt=vfsv0/' -i.bkp1 /etc/fstab 
+		&,usrjquota=aquota.user,jqfmt=vfsv0/' -i.bkp1 /etc/fstab 
 \end_layout
 
 \begin_layout Plain Layout
@@ -1142,52 +1142,55 @@ Debe tener asignado los permisos suficientes para poder ejecutar el “ls”
 
 \end_deeper
 \begin_layout Standard
-Comentar por que tenemos un grupo ejecutivos?  La creación de un grupo ejecutivo
-s facilita la ejecucion de los programas por parte de los ejecutivos unicamente,
- asi como simplificar las tareas de asignación de permisos a los nuevos
- usuarios ejecutivos.# tener que editar las ACL de dichos programas, si se
- hubiera llevado a cabo# de esa forma (con acls en vez de grupo).
+La creación de un grupo ejecutivos facilita la ejecución de los programas
+ por parte de los ejecutivos únicamente, así como simplificar las tareas
+ de asignación de permisos a nuevos ejecutivos que pudieran ser añadidos
+ posteriormente.
 \end_layout
 
 \begin_layout Standard
-1.- Los ejecutivos asociados a un determinado proyecto podrán leer la información
- de ese proyecto Este punto lo resolvimos mediante ACLs.
- Otrogando exclusivamente permisos de lectura y ejecución a cada usuario
- ejecutivo perteneciente a cada proyecto.
+El primer punto se resolvió mediante el uso de ACLs, otorgando exclusivamente
+ permisos de lectura y ejecución a cada ejecutivo perteneciente a cada proyecto.
 \end_layout
 
 \begin_layout Standard
-2.- Los ejecutivos que no pertenezcan a un proyecto no deben poder acceder
- directamente a los directorios de los proyectos En esta ocasión se optó
- por denegar todos los permisos a cualquier  leer, ejecutar, o manipular
- el contenido de las carpetas de las proyectos, incluyendo a los  usuarios
- ejecutivos que no tuviesen asignado un proyecto.	chmod ??0 /home/proyectos/aerop
-uerto...
+En el segundo se optó por denegar los permisos para leer, ejecutar, o manipular
+ el contenido de los directorios de las proyectos para el resto de usuarios
+ (que no sean propietarios ni miembros del grupo propietario), incluyendo
+ de este modo a los ejecutivos que no tuviesen asignado un determinado proyecto.
 \end_layout
 
 \begin_layout Standard
-3.- Para que estos ejecutivos puedan controlar el estado de cada proyecto,
- deben existir en el directorio /usr/local/bin tantos programas como proyectos
- existan.
- En este punto se ha decidido crear tres programas(uno por cada proyecto)
- ejecutables con el bit setuid  activo, y cuyo proietario es  Para que los
- ejecutivos puedan ejecutarlo, el grupo propietario de los programas es
- el  grupo ejecutivos, y tiene asignados permisos de lectura y ejecución.
+Por otra parte, para que los ejecutivos puedan controlar el estado de cada
+ proyecto, deben existir en el directorio /usr/local/bin tantos programas
+ como proyectos existan.
+ Estos programas consisten en un pequeño código en C que realiza una llamada
+ a la función 
+\emph on
+execl()
+\emph default
+ y que internamente realizan un 
+\emph on
+ls 
+\emph default
+sobre el directorio del proyecto especificado.
+ Además, a los ejecutables ya compilados se les activa el bit SETUID mediante
+ 
+\emph on
+chmod
+\emph default
+, y se establece como usuario propietario de los mismos a root, de forma
+ que al realizarse la suplantación de EUID se tienen suficientes permisos
+ para efectuar el 
+\emph on
+ls
+\emph default
+ sobre los proyectos.
+ Para que los ejecutivos puedan ejecutarlo (y sólamente ellos), el grupo
+ propietario de dichos binarios es el grupo ejecutivos, y tiene asignados
+ permisos de lectura y ejecución.
  De esta forma, los ejecutivos pueden acceder a los proyectos de manera
- controlada por los administradores ( quienes definen las operaciones permitidas
- )	programas
-\end_layout
-
-\begin_layout Standard
-4.- execl
-\end_layout
-
-\begin_layout Standard
-5.- a) chown root & chgrp ejecutivos
-\end_layout
-
-\begin_layout Standard
-b) bit setuid
+ controlada por los administradores.
 \end_layout
 
 \begin_layout Part

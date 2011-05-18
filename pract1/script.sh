@@ -73,8 +73,9 @@ function set_fstab {
    # Comprobar si estaban seteadas las cuotas en la particion de /home
    if [[ -z `grep -v "^\s*#" /etc/fstab | grep usrjquota` ]]
    then
-      echo "[*] Cuotas no establecidas previamente en /etc/fstab, modificando..."
-      sed -r 's/^\s*[^#]\S*\s+\/home\s+\S+\s+\S+/&,usrjquota=aquota.user,jqfmt=vfsv0/' -i.bkp1 /etc/fstab
+      echo "[*] Cuotas no establecidas previamente en fstab, modificando..."
+      sed -r 's/^\s*[^#]\S*\s+\/home\s+\S+\s+\S+/
+              &,usrjquota=aquota.user,jqfmt=vfsv0/' -i.bkp1 /etc/fstab
       remount_needed=true
    else 
       echo "[+] Cuotas establecidas previamente"
@@ -83,7 +84,7 @@ function set_fstab {
    # Idem para las listas de control de acceso (ACL)
    if [[ -z `grep -v "^\s*#" /etc/fstab | grep acl` ]]
    then
-      echo "[*] ACL's no establecidas previamente en /etc/fstab, modificando..."
+      echo "[*] ACL's no establecidas previamente en fstab, modificando..."
       sed -r 's/^\s*[^#]\S*\s+\/home\s+\S+\s+\S+/&,acl/' -i.bkp2 /etc/fstab
       remount_needed=true
    else
@@ -106,7 +107,7 @@ function set_fstab {
    fi
 }
 
-# --------....--------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 # FUNCION    : create_ls
 # DESCRIPCION: Crea un pequenyo programa ejecutable en C que emula un 
@@ -157,7 +158,8 @@ function set_pam {
    #                              pam_time.so\n&/m' -i.bkp /etc/pam.d/login
    if [[ -z `egrep "^\s*account\s+required\s+pam_time.so" /etc/pam.d/login` ]]
    then
-      sed -r '0,/^\s*account.*/s/^\s*account.*/account    required     pam_time.so\n&/' -i.bkp /etc/pam.d/login
+      sed -r '0,/^\s*account.*/s/^\s*account.*/
+              account required pam_time.so\n&/' -i.bkp /etc/pam.d/login
    fi
 
    # Crear backup del fichero /etc/security/time.conf si no existia 
