@@ -92,7 +92,19 @@ Antes de empezar a trabajar, es necesario tener en cuenta algunas consideracione
 s previas, especialmente si se utiliza software de virtualización para la
  implementación de las máquinas en este escenario.
  En el caso de VirtualBox, se necesita añadir una nueva interfaz de red
- tanto en la máquina cliente como en la servidor, con la categoría 
+ tanto en la máquina cliente como en la servidor, con la categoría Red interna.
+ Se ha de comprobar que como nombre de red tanto la MV servidora como la 
+ cliente tienen el mismo nombre de adaptador de red ( innet ).
+\begin_inset Newline newline
+\end_inset
+En la máquina servidora se le establece la configuración IP de manera stática.
+ Se le da IP 192.168.0.20 con mascara de red 255.255.255.0 a la interfaz de
+ red cuya dirección MAC corresponda al adaptador de red configurado (innet)
+ configurado. Esto se puede realizar manualmente mediante el comando ifconfig,
+ o de forma que se ejecute al iniciar la máquina configurando un fichero
+ /etc/sysconfig/network-scripts/ifcfg-ethX con el parámetro ONBOOT=yes.
+ En la máquina cliente se debe hacer lo mismo, asignándole la IP 192.168.0.30
+ .
 \begin_inset Quotes eld
 \end_inset
 
