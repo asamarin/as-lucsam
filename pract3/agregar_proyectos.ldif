@@ -1,0 +1,19 @@
+dn: ou=auto.misc,dc=aso11,dc=org
+ou: auto.misc
+objectClass: top
+objectClass: automountMap
+
+dn: cn=/import/proyectos,ou=auto.master,dc=aso11,dc=org
+cn: /import/proyectos
+objectClass: automount
+automountInformation: ldap 192.168.0.20:ou=auto.misc,dc=aso11,dc=org
+
+dn: cn=videojuegos,ou=auto.misc,dc=aso11,dc=org
+cn: videojuegos
+objectClass: automount
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/proyectos/videojuegos
+
+dn: cn=portales,ou=auto.misc,dc=aso11,dc=org
+cn: portales
+objectClass: automount
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/proyectos/portales
