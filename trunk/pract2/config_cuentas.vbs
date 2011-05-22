@@ -1,13 +1,13 @@
 set shell = createobject("wscript.shell")
 
 For i = 1 To 5
-    shell.run "net user emple"&i&" /time:M-Su,08:00-15:00"
+    shell.run "net user emple" & i & " /time:M-Su,08:00-15:00"
 Next
 
 WScript.Echo "Turno de emple1-5 asignado"
 
 For i = 6 To 10
-    shell.run "net user emple"&i&" /time:M-Su,14:00-21:00"
+    shell.run "net user emple" & i & " /time:M-Su,14:00-21:00"
 Next
 
 WScript.Echo "Turno de emple6-10 asignado"

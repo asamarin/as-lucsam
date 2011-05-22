@@ -1,0 +1,1152 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language spanish
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Índice
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.5cm
+\topmargin 2.5cm
+\rightmargin 2.5cm
+\bottommargin 2.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\listings_params "frame=shadowbox,language={command.com},rulesepcolor={\color{black}}"
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Informe práctica 2
+\begin_inset Newline newline
+\end_inset
+
+Usuarios y protección en Windows 2000
+\end_layout
+
+\begin_layout Author
+Alejandro Samarín Pérez - alu3862
+\begin_inset Newline newline
+\end_inset
+
+José Lucas Grillo Lorenzo - alu3181
+\end_layout
+
+\begin_layout Abstract
+El objetivo de la práctica consiste en familiarizarse con la gestión de
+ usuarios y protección en Windows 2000.
+ Para ello, se plantea una organización ficticia a la que hay que dotar
+ con un sistema de cuentas y de seguridad a nivel de recursos.
+\end_layout
+
+\begin_layout Part
+Configuración previa
+\end_layout
+
+\begin_layout Standard
+Previamente a la resolución de esta práctica hubo que realizar una serie
+ de procesos para configurar correctamente el servidor W2K3:
+\end_layout
+
+\begin_layout Enumerate
+Establecer el nombre de dominio del servidor a aso11.org
+\end_layout
+
+\begin_layout Enumerate
+Cambiar la IP DNS primaria a 10.0.2.15
+\end_layout
+
+\begin_layout Enumerate
+Instalar el servicio DNS en el servidor a través de los componentes de Windows
+\end_layout
+
+\begin_layout Enumerate
+Herramientas administrativas
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+DNS
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Agregar zonas en resolución forward y reverse
+\end_layout
+
+\begin_layout Enumerate
+Instalar el Active Directory, y activarlo mediante el comando 
+\emph on
+dcpromo
+\emph default
+.
+\end_layout
+
+\begin_layout Part
+Organización del dominio
+\end_layout
+
+\begin_layout Standard
+Para mantener un cierto orden en la aplicación de permisos y futuras políticas
+ de grupos, se han definido tres unidades organizativas, una por cada proyecto
+ (Auditorio, Aeropuerto y Parque).
+ Dentro de cada una de las OU, se han creado dos grupos locales (directores
+ y participantes) a los que les serán concedidos o revocados los permisos
+ pertinentes, y cuyos únicos miembros son los grupos globales correspondientes.
+ Además, se ha incluido otro grupo local para los ejecutivos cuyo único
+ miembro es el grupo global del mismo nombre.
+\end_layout
+
+\begin_layout Standard
+La finalidad que esto tiene es implementar una estructura de directorio
+ adaptada a posibles ampliaciones del esquema de la organización; en el
+ caso de que la organización conste de varios dominios y no sólo de uno,
+ como es el caso que se trata aquí, será posible establecer permisos sobre
+ los grupos locales que controlan los recursos y dar así acceso a los usuarios
+ de la organización que sean miembros de los grupos globales que están incluidos
+ a su vez en los grupos locales.
+\end_layout
+
+\begin_layout Part
+Resolución de requisitos de la organización
+\end_layout
+
+\begin_layout Standard
+Se pasa a continuación a listar las exigencias a implementar en el Active
+ Directory y seguidamente la ruta de ventanas/pestañas seguida para configurarlo
+s, o una pequeña descripción de los pasos realizados para esta tarea:
+\end_layout
+
+\begin_layout Subsection*
+a) Sistema
+\end_layout
+
+\begin_layout Subparagraph*
+- Cualquier usuario debe poder apagar el sistema
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Local Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ User Rights Assignment 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Shut down the system
+\end_layout
+
+\begin_layout Subparagraph*
+- Los usuarios tienen restringidas las horas de acceso al sistema
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Active Directory Users and Computers 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ (Click derecho sobre el usuario en cuestion) 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Properties 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Pestaña account 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Logon hours
+\end_layout
+
+\begin_layout Standard
+También se ha optado por automatizar esta tarea tediosa mediante un VBScript
+ que invoca al comando 'net user' (Ver anexos).
+\end_layout
+
+\begin_layout Subsection*
+b) Contraseñas
+\end_layout
+
+\begin_layout Subparagraph*
+- A fin de facilitar la gestión, asignar como contraseña el nombre del usuario
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Active Directory Users and Computers 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ (Click derecho sobre el usuario en cuestion) 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Reset password
+\end_layout
+
+\begin_layout Subparagraph*
+- Los usuarios deben cambiar las contraseñas cada tres meses
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Password Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Maximum password age 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 90 days
+\end_layout
+
+\begin_layout Subparagraph*
+- Los usuarios no pueden cambiar las contraseñas hasta 2 semanas después
+ de haberla cambiado
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Password Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Minimum password age 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 14 days
+\end_layout
+
+\begin_layout Subparagraph*
+- No se permiten contraseñas en blanco.
+ Longitud mínima: 4 caracteres
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Password Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Minimum password length 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 4 characters
+\end_layout
+
+\begin_layout Subparagraph
+- La nueva contraseña no debe coincidir con las dos últimas introducidas
+ por el usuario
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Password Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Enforce password history 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 2 passwords remembered
+\end_layout
+
+\begin_layout Subparagraph*
+- Si se producen 4 intentos de autenticación fallidos a una cuenta de usuario
+ en un intervalo de 10 minutos, ésta debe quedar permanentemente bloqueada
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Lockout Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account lockout threshold 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 4 invalid logon attempts
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Lockout Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account lockout duration 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 0 (Permancece bloqueada hasta que el administrador intervenga)
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account Lockout Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Reset account lockout counter after 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 10 minutes
+\end_layout
+
+\begin_layout Subparagraph*
+- Deben quedar registrados los intentos fallidos de entrada en el sistema
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Default Domain Security Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Local Policies 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Audit Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Audit account logon events 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Define these policy settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Marcar 
+\begin_inset Quotes eld
+\end_inset
+
+Failure
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se realiza el mismo paso en 
+\begin_inset Quotes eld
+\end_inset
+
+Default Domain Controller Security Settings
+\begin_inset Quotes erd
+\end_inset
+
+ para evitar que entren en conflicto las políticas de seguridad del dominio
+ y las políticas de seguridad del controlador de dominio.
+\end_layout
+
+\begin_layout Subsection*
+c) Directorio privado de los usuarios
+\end_layout
+
+\begin_layout Subsubsection*
+- Todo usuario debe disponer de un directorio propio a partir del directorio
+ 
+\backslash
+home del servidor, cuyo nombre coincida con el de la cuenta del usuario.
+ El usuario podrá acceder automáticamente a este directorio a partir de
+ la unidad N: desde cualquier máquina del dominio.
+\end_layout
+
+\begin_layout Subsubsection*
+- En este directorio, el usuario debe tener control total
+\end_layout
+
+\begin_layout Subsubsection*
+- El resto de los usuarios no podrá tener ningún tipo de acceso sobre este
+ directorio
+\end_layout
+
+\begin_layout Standard
+Crear directorio "C:
+\backslash
+home" 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ (Click derecho) 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Sharing and security 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Pestaña Sharing 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Share this folder 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Permissions 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Full control for Everyone (permisos de red)
+\end_layout
+
+\begin_layout Standard
+De nuevo click derecho 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Propiedades 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Pestaña security 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Advanced 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Desmarcar "Allow inheritable permissions..." 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Remove en el cuadro de diálogo
+\end_layout
+
+\begin_layout Standard
+Admin Tools 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Active Directory Users and Computers 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ (Click derecho sobre el usuario en cuestión) 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Properties 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Pestaña Profile 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Home folder 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Connect N: to 
+\backslash
+
+\backslash
+ORD11
+\backslash
+home
+\backslash
+empleX
+\end_layout
+
+\begin_layout Standard
+(No hace falta crear la carpeta del empleado previamente)
+\end_layout
+
+\begin_layout Subsection*
+d) Proyectos de la organización.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+- Cada proyecto dispondrá de un directorio para almacenar la información
+ relativa al mismo bajo el directorio 
+\backslash
+proyectos.
+ Cada usuario podrá acceder automáticamente a los proyectos en los que participe
+ a partir de las unidades p:, q:,...
+ desde cualquier máquina del dominio
+\end_layout
+
+\begin_layout Standard
+Se crea una carpeta 'proyectos' en C:
+\backslash
+ , y se le da 
+\begin_inset Quotes eld
+\end_inset
+
+Full Control
+\begin_inset Quotes erd
+\end_inset
+
+ a 
+\begin_inset Quotes eld
+\end_inset
+
+Everyone
+\begin_inset Quotes erd
+\end_inset
+
+ en permisos de red.
+ En los permisos NTFS de 'proyectos' se permite acceso exclusivamente a
+ los administradores, y se desactiva la herencia de permisos como con la
+ carpeta 'home'.
+ Dentro de la carpeta 'proyectos', se crean dentro tres carpetas, una por
+ proyecto.
+ Se le da acceso por NTFS a cada unidad organizativa responsable de su proyecto.
+\end_layout
+
+\begin_layout Standard
+Para que los usuarios puedan acceder automáticamente a los proyectos, en
+ 
+\begin_inset Quotes eld
+\end_inset
+
+C:
+\backslash
+Windows
+\backslash
+SYSVOL
+\backslash
+sysvol
+\backslash
+aso11.org
+\backslash
+scripts
+\begin_inset Quotes erd
+\end_inset
+
+ se guarda el siguiente script batch (unidades_proyectos.bat):
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	@echo off
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	net use p: 
+\backslash
+
+\backslash
+ord11
+\backslash
+proyectos
+\backslash
+auditorio
+\end_layout
+
+\begin_layout Plain Layout
+
+	net use q: 
+\backslash
+
+\backslash
+ord11
+\backslash
+proyectos
+\backslash
+aeropuerto
+\end_layout
+
+\begin_layout Plain Layout
+
+	net use r: 
+\backslash
+
+\backslash
+ord11
+\backslash
+proyectos
+\backslash
+parque
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A continuación, para cada usuario se repiten los mismo pasos:
+\end_layout
+
+\begin_layout Standard
+Active Directory Users and Computers 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Click Derecho sobre el usuario 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Properties 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Pestaña Profile 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Logon Script 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ unidades_proyectos.bat (sin rutas, solo nombre y extensión)
+\end_layout
+
+\begin_layout Standard
+Esto es automatizable mediante el uso del script 
+\begin_inset Quotes eld
+\end_inset
+
+xcacls.vbs
+\begin_inset Quotes erd
+\end_inset
+
+ para los permisos NTFS y el comando 
+\begin_inset Quotes eld
+\end_inset
+
+net user
+\begin_inset Quotes erd
+\end_inset
+
+ para los permisos de red.
+\end_layout
+
+\begin_layout Subsubsection*
+- Todos los usuarios que participan en un proyecto deben tener la posibilidad
+ de leer y modificar los archivos que forman parte del proyecto
+\end_layout
+
+\begin_layout Standard
+Se agregan a los participantes y directores de cada proyecto como grupos
+ privilegiados en sus respectivas carpetas de proyectos.
+ A los participantes se les da permiso de 'Modificar' y 'Lectura'.
+\end_layout
+
+\begin_layout Subsubsection*
+- Los usuarios no podrán crear ni borrar archivos del proyecto.
+ Esta función la realizará el director del mismo
+\end_layout
+
+\begin_layout Standard
+Dentro de las propiedades de cada proyecto 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Security 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Advanced 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Pinchar sobre participantes 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Edit.
+ 
+\end_layout
+
+\begin_layout Standard
+Se crearán dos permisos por cada participante y carpeta de proyecto.
+ Para los permisos sobre las carpetas y subcarpetas se selecciona en 'Apply
+ onto' 'This folder and subfolders', y se desmarca 'Create Folder' y 'Create
+ Files' y ambos 'Delete (...)' ('Write atributes', 'Read Attributes', 'List
+ Folder/Read Data', 'Traverse Folder/Execute File' se dejan marcados).
+\end_layout
+
+\begin_layout Standard
+Para los permisos sobre archivos, se selecciona 'Files only' en 'Apply onto',
+ y se repiten los permisos anteriores pero marcando ahora 'Write Data' y
+ 'Append Data'.
+\end_layout
+
+\begin_layout Standard
+En cuanto a los directores, véase la sección 
+\series bold
+\emph on
+f
+\series default
+\emph default
+.
+\end_layout
+
+\begin_layout Subsection*
+e) Usuarios de la organización
+\end_layout
+
+\begin_layout Subparagraph*
+- Los usuarios implicados en los proyectos tendrán restringida la hora de
+ acceso al sistema
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Véase sección 
+\series bold
+\emph on
+a
+\series default
+\emph default
+, punto 2.
+\end_layout
+
+\begin_layout Subparagraph*
+- Les debe ser asignado un perfil flotante que no puedan modificar
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para ello, la manera más eficiente es crear primero un usuario 
+\begin_inset Quotes eld
+\end_inset
+
+por defecto
+\begin_inset Quotes erd
+\end_inset
+
+ y loguearse en su cuenta.
+ A continuación, tras instalar los programas de usuario pertinentes o ajustar
+ cualquier otro parámetro con el que se desea que cuenten los usuarios,
+ se copia este perfil a alguna carpeta compartida del servidor (C:
+\backslash
+netlogon
+\backslash
+default por ejemplo).
+ Para realizar esta acción, se siguen los sigiuentes pasos: Start 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Control Panel 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ System 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Advanced 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ User Profiles 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Settings 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Copy To 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ C:
+\backslash
+netlogon
+\backslash
+default.
+ 
+\end_layout
+
+\begin_layout Standard
+En esta carpeta, se ha de cambiar la extensión del archivo 
+\begin_inset Quotes eld
+\end_inset
+
+ntuser.dat
+\begin_inset Quotes erd
+\end_inset
+
+ a 
+\begin_inset Quotes eld
+\end_inset
+
+ntuser.man
+\begin_inset Quotes erd
+\end_inset
+
+, para indicar que es un perfil mandatorio.
+ Ahora, en 
+\begin_inset Quotes eld
+\end_inset
+
+Active Directory Users and Computers, se seleccionan todos los usuarios
+ a la vez y se ejecuta click derecho 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Properties 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Account 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Cambiar 'Profile path' y hacer que apunten todos al perfil de este usuario
+ ('
+\backslash
+
+\backslash
+ORD11
+\backslash
+default').
+ Los cambios en los perfiles de los usuarios se pueden automatizar con el
+ comando 
+\begin_inset Quotes eld
+\end_inset
+
+net user
+\begin_inset Quotes erd
+\end_inset
+
+ (Ver script 
+\begin_inset Quotes eld
+\end_inset
+
+config_cuentas.vbs
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection*
+f) Directores de los proyectos
+\end_layout
+
+\begin_layout Subparagraph*
+- Tienen control total sobre los archivos del proyecto que dirigen
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dentro de las propiedades de cada proyecto 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Security 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Pinchar sobre el grupo de directores 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ y marcar 'Full Control', para así dar permisos totales a los directores
+ de su correspondiente proyecto.
+\end_layout
+
+\begin_layout Subsection*
+g) Ejecutivos de la organización
+\end_layout
+
+\begin_layout Standard
+Se crea un nuevo grupo 
+\begin_inset Quotes eld
+\end_inset
+
+Ejecutivos
+\begin_inset Quotes erd
+\end_inset
+
+, y se le incluyen los ejecutivos correspondientes.
+\end_layout
+
+\begin_layout Subparagraph*
+- Podrán acceder a cualquiera de los directorios de los proyectos en curso
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se crea un nuevo script en SYSVOL que mapee 'p:' a 'C:
+\backslash
+proyectos', asignándoselo a los ejecutivos en el campo 'Logon script' como
+ fue explicado anteriormente.
+\end_layout
+
+\begin_layout Subparagraph*
+- Pueden leer la información de estos proyectos
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Desde la carpeta raíz de 'proyectos' se añade un nuevo permiso de lectura
+ y ejecución para el grupo ejecutivos (que será subsecuentemente heredado
+ por las carpetas de todos los proyectos).
+\end_layout
+
+\begin_layout Subparagraph*
+- No pueden alterar dicha información
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En el punto anterior, al especificar los permisos del grupo ejecutivos sobre
+ la carpeta proyectos, se le indica que no pueden cambiar los permisos de
+ dicha carpeta.
+\end_layout
+
+\begin_layout Subsection*
+h) Resto de usuarios
+\end_layout
+
+\begin_layout Subparagraph*
+- No dispondrán de ningún derecho de acceso a los directorios de los proyectos
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Por defecto el resto de usuarios no tienen permiso alguno para acceder a
+ las carpetas compartidos, puesto que no se han dado permisos para 'Everyone'
+ a ningún recurso de los administrados.
+ Esta opción es preferible a denegar explícitamente el acceso a todos los
+ usuarios ajenos a la organización, puesto que sería una opción menos eficiente
+ y más propensa a dar problemas.
+\end_layout
+
+\end_body
+\end_document
