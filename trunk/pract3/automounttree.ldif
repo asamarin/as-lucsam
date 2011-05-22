@@ -8,24 +8,24 @@ cn: /import/casa
 objectClass: automount
 automountInformation: ldap 192.168.0.20:ou=auto.home,dc=aso11,dc=org
 
-dn: ou=auto.home,dc=aso11,dc=org
-ou: auto.home
-objectClass: top
-objectClass: automountMap
+#dn: ou=auto.home,dc=aso11,dc=org
+#ou: auto.home
+#objectClass: top
+#objectClass: automountMap
 
 dn: cn=irene,ou=auto.home,dc=aso11,dc=org
 cn: irene
 objectClass: automount
-automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/home/irene
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/casa/irene
 
 dn: cn=laura,ou=auto.home,dc=aso11,dc=org
 cn: laura
 objectClass: automount
-automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/home/laura
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/casa/laura
 
 dn: cn=clara,ou=auto.home,dc=aso11,dc=org
 cn: clara
 objectClass: automount
-automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/home/clara
+automountInformation: -fstype=nfs,rw,hard,intr,nodev,exec,nosuid,rsize=8192,wsize=8192 192.168.0.20:/export/casa/clara
 
 # FALTAN las entradas de las carpetas proyectos y comun
