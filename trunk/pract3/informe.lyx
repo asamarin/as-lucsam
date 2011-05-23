@@ -25,9 +25,10 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
-\use_geometry false
+\use_geometry true
 \use_amsmath 1
 \use_esint 1
 \use_mhchem 1
@@ -42,6 +43,10 @@
 \shortcut idx
 \color #008000
 \end_index
+\leftmargin 2.5cm
+\topmargin 2.5cm
+\rightmargin 2.5cm
+\bottommargin 2.5cm
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -50,6 +55,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
+\listings_params "frame=shadowbox,language=bash,rulesepcolor={\color{black}}"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -93,18 +99,41 @@ s previas, especialmente si se utiliza software de virtualización para la
  implementación de las máquinas en este escenario.
  En el caso de VirtualBox, se necesita añadir una nueva interfaz de red
  tanto en la máquina cliente como en la servidor, con la categoría Red interna.
- Se ha de comprobar que como nombre de red tanto la MV servidora como la 
- cliente tienen el mismo nombre de adaptador de red ( innet ).
-\begin_inset Newline newline
+ Se ha de comprobar que como nombre de red tanto la MV servidora como la
+  cliente tienen el mismo nombre de adaptador de red ( innet ).
+ Tras realizar los pasos pertinentes, se puede comprobar el correcto funcionamie
+nto de la red interna mediante el uso del comando 
+\begin_inset Quotes eld
 \end_inset
-En la máquina servidora se le establece la configuración IP de manera stática.
- Se le da IP 192.168.0.20 con mascara de red 255.255.255.0 a la interfaz de
- red cuya dirección MAC corresponda al adaptador de red configurado (innet)
- configurado. Esto se puede realizar manualmente mediante el comando ifconfig,
- o de forma que se ejecute al iniciar la máquina configurando un fichero
- /etc/sysconfig/network-scripts/ifcfg-ethX con el parámetro ONBOOT=yes.
- En la máquina cliente se debe hacer lo mismo, asignándole la IP 192.168.0.30
- .
+
+ping
+\begin_inset Quotes erd
+\end_inset
+
+ desde el servidor hacia el cliente y viceversa.
+\end_layout
+
+\begin_layout Subsubsection*
+Servidor
+\end_layout
+
+\begin_layout Standard
+En la máquina servidora se establece la configuración IP de manera estática.
+ Se le da IP 192.168.0.20 con máscara de red 255.255.255.0 a la interfaz de red
+ cuya dirección MAC corresponde al adaptador de red configurado (innet).
+ Esto se puede realizar manualmente mediante el comando ifconfig, o de forma
+ que se ejecute al iniciar la máquina configurando un fichero /etc/sysconfig/net
+work-scripts/ifcfg-ethX con el parámetro ONBOOT=yes.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+Cliente
+\end_layout
+
+\begin_layout Standard
+Aquí se debe hacer lo mismo, asignándole la IP 192.168.0.30 a la interfaz correspon
+diente a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -112,7 +141,329 @@ Red interna
 \begin_inset Quotes erd
 \end_inset
 
- para crear una red local entre ellas.
+ para crear una red local entre servidor y cliente.
+\end_layout
+
+\begin_layout Part
+Instalación y configuración de OpenLDAP
+\end_layout
+
+\begin_layout Subsubsection*
+Servidor
+\end_layout
+
+\begin_layout Standard
+La primera acción a realizar es instalar el servicio OpenLDAP:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	yum install openldap-servers
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+Lo siguiente es configurar OpenLDAP propiamente dicho, comenzando por la
+ especificación de un usuario (admin) que se encargará de las tareas de
+ administración del mismo, modificando las siguientes líneas en el fichero
+ /etc/openldap/slapd.d/cn=config/olcDatabase={0}config.ldif:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	olcRootDN: cn=admin,cn=config
+\end_layout
+
+\begin_layout Plain Layout
+
+	olcRootPW: {SSHA}···
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En el campo olcRootPW se debe especificar la password de este usuario 'admin',
+ que ha sido generada por el comando 
+\begin_inset Quotes eld
+\end_inset
+
+slappasswd
+\begin_inset Quotes erd
+\end_inset
+
+ (Esto se puede automatizar usando la opcion -s tal que así: 
+\begin_inset Quotes eld
+\end_inset
+
+slappasswd -s 
+\emph on
+contraseña
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Una vez configurado el usuario 'admin', es necesario hacer lo mismo para
+ el usuario que se encargará de gestionar el directorio OpenLDAP (Manager).
+ Para ello, se han de modificar los siguientes campos en el fichero /etc/openlda
+p/slapd.d/cn=config/olcDatabase={1}bdb.ldif:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	olcSuffix: dc=aso11,dc=org
+\end_layout
+
+\begin_layout Plain Layout
+
+	olcRootDN: cn=Manager,dc=aso11,dc=org
+\end_layout
+
+\begin_layout Plain Layout
+
+	olcRootPW: {SSHA}···
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ahora, es necesario darle permisos de escritura a este usuario para que
+ pueda modificar el directorio, así como denegar cualquier otro acceso no
+ autorizado al mismo.
+ Esto se realiza modificando el siguiente atributo en el fichero /etc/openldap/s
+lapd.d/cn=config/olcDatabase={2}monitor.ldif:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	olcAccess: {0} to *
+\end_layout
+
+\begin_layout Plain Layout
+
+               by dn.base='cn=Manager,dc=aso11,dc=org' write
+\end_layout
+
+\begin_layout Plain Layout
+
+               by * none
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Una vez terminada la configuración de los usuarios relativos a la administración
+ y gestión del OpenLDAP, se requiere insertar los datos de la organización.
+ Como ayuda para esto, se hizo uso de las 
+\begin_inset Quotes eld
+\end_inset
+
+migration_tools
+\begin_inset Quotes erd
+\end_inset
+
+ para generar los fichero LDIF correspondientes a usuarios y grupos (teniendo
+ en cuenta que es recomendable ajustar los campos $DEFAULT_MAIN_DOMAIN y
+ $DEFAULT_BASE del fichero 
+\begin_inset Quotes eld
+\end_inset
+
+migrate_common.ph
+\begin_inset Quotes erd
+\end_inset
+
+ acordes con el esquema de la organización).
+ Previamente, se crearon localmente los usuarios y grupos en el sistema,
+ ya que las migration_tools extraen la información de ciertos ficheros locales
+ y la convierten a formato LDIF.
+\end_layout
+
+\begin_layout Part
+Autentificación por LDAP
+\end_layout
+
+\begin_layout Subsubsection*
+Servidor
+\end_layout
+
+\begin_layout Standard
+En este punto, lo primero que hay que realizar es iniciar el servicio 
+\emph on
+slapd
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	service slapd start
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La base del directorio LDAP está compuesta por la especificación del dominio
+ en la raíz y por dos unidades organizativas, People y Group, para agrupar
+ a los usuarios y a los grupos respectivamente.
+ Para añadirlos, se ha partido de los ficheros LDIF generados con las migration_
+tools a partir de un subconjunto de 
+\emph on
+/etc/passwd 
+\emph default
+y 
+\emph on
+/etc/group
+\emph default
+.
+ Con el siguiente comando se introducen en la BDB las entradas LDIF (también
+ puede usarse 
+\begin_inset Quotes eld
+\end_inset
+
+ldapadd
+\begin_inset Quotes erd
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	ldapmodify -x -D cn=Manager,dc=aso11,dc=org -H ldap://localhost -W -f <fichero
+ LDIF>
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Cliente
 \end_layout
 
 \end_body
