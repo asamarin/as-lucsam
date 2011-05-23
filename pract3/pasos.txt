@@ -126,7 +126,8 @@ Configurar conexion entre cliente y servidor (en Linux):
 ---------------------
         AUTOFS
 ---------------------
-
+-> En el cliente instalar:
+	autofs
 
 -> Se crean los scripts autofs.ldif, modifica el esquema LDAP para activar el automontaje, y automounttree.ldif, que se encarga de montar las carpetas de usuario, de proyectos, y la carpeta comun en la máquina local al autentificarse en el servidor LDAP.
 
