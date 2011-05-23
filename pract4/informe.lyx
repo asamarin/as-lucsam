@@ -1,0 +1,767 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language spanish
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Índice
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.5cm
+\topmargin 2.5cm
+\rightmargin 2.5cm
+\bottommargin 2.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\listings_params "frame=shadowbox,language={command.com},rulesepcolor={\color{black}}"
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Informe práctica 4
+\begin_inset Newline newline
+\end_inset
+
+Administración del Directorio Activo
+\end_layout
+
+\begin_layout Author
+Alejandro Samarín Pérez - alu3862
+\begin_inset Newline newline
+\end_inset
+
+José Lucas Grillo Lorenzo - alu3181
+\end_layout
+
+\begin_layout Abstract
+El objetivo de la práctica consiste en familiarizarse con la gestión de
+ Unidades Organizativas y Directivas de Grupo en Windows 2000.
+ Para ello, se plantea una organización ficticia con las características
+ que se detallan a continuación.
+\end_layout
+
+\begin_layout Part
+Esquema de la organización
+\end_layout
+
+\begin_layout Subparagraph*
+La organización, ubicada físicamente en un solo edificio dispone de una
+ red LAN que une a todos los ordenadores.
+ Desde el punto de vista funcional, la organización se encuentra dividida
+ en tres departamentos: Contabilidad, Recursos Humanos y Comercial, estando
+ el departamento de Contabilidad dividido en dos secciones: Compras y Ventas.
+ Cada departamento consta de 4 usuarios, estando éstos repartidos de forma
+ simétrica en las dos secciones del departamento de Contabilidad.
+ La administración de los usuarios y grupos del departamento de Contabilidad
+ se ha descentralizado, de tal forma que existe un usuario en ese departamento
+ que realiza estas funciones.
+\end_layout
+
+\begin_layout Enumerate
+Se reorganizan los usuarios creando grupos locales en cada unidad organizativa
+ (OU), a los cuales se le asignan los permisos y las políticas de grupos
+ (GPOs).
+ Luego se crean grupos globales en la carpeta Users, donde se agregan a
+ los usuarios, y a su vez los grupos globales son añadidos dentro de los
+ grupos locales (para la gestión de permisos NTFS).
+\end_layout
+
+\begin_layout Enumerate
+Se crean 3 OU, una para cada departamento: 
+\shape italic
+Contabilidad
+\shape default
+, 
+\shape italic
+RRHH
+\shape default
+ y 
+\shape italic
+Comercial
+\shape default
+.
+ A su vez, 
+\shape italic
+Contabilidad
+\shape default
+ se compone de otras 2 unidades organizativas: 
+\shape italic
+Compras
+\shape default
+ y 
+\shape italic
+Ventas
+\shape default
+.
+\end_layout
+
+\begin_layout Part
+Redirección de carpetas
+\end_layout
+
+\begin_layout Subparagraph*
+Todos los usuarios han de tener mapeada una unidad que apunta a un sistema
+ de archivos distribuido.
+ La carpeta raíz del DFS apuntará al directorio compartido [unidad]
+\backslash
+datos donde [unidad] representa el directorio raíz de cada uno de los grupos.
+ Bajo esta raíz aparecerán dos enlaces que corresponderán a los directorios
+ [unidad]
+\backslash
+Temp
+\backslash
+unidad1 y [unidad]
+\backslash
+foo
+\backslash
+unidad2 que han de aparecer con los nombres Empleados y Ejecutivos respectivamen
+te:
+\end_layout
+
+\begin_layout Enumerate
+Se crean las carpetas compartidas C:
+\backslash
+rootdfs, C:
+\backslash
+temp
+\backslash
+unidad1, C:
+\backslash
+foo
+\backslash
+unidad2 para simular el DFS.
+\end_layout
+
+\begin_layout Enumerate
+A continuación, en Administrative Tools
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Distributed File System, se configura la carpeta raiz del DFS, en este caso
+ 
+\backslash
+
+\backslash
+ORD11
+\backslash
+rootdfs y se le enlazan las carpetas compartidas, mencionadas anteriormente,
+ con los nombres de "Empleados" y "Ejecutivos".
+\end_layout
+
+\begin_layout Part
+Directivas de grupos
+\end_layout
+
+\begin_layout Subparagraph*
+Todos los usuarios de la organización han de cumplir forzosamente las siguientes
+ restricciones: 
+\end_layout
+
+\begin_layout Subsection*
+a) Contraseñas
+\end_layout
+
+\begin_layout Subparagraph*
+Longitud mínima de la contraseña: 5 caracteres 
+\end_layout
+
+\begin_layout Subparagraph*
+Cambio de contraseña cada 6 meses
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La configuración de las passwords se aplica al dominio editando la GPO 
+\begin_inset Quotes eld
+\end_inset
+
+Default Domain Policies
+\begin_inset Quotes erd
+\end_inset
+
+ y siguiendo la ruta: Computer config
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Windows Settings
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Security Settings
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Account Policies
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Password Policy
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+modificando las claves 
+\begin_inset Quotes eld
+\end_inset
+
+Maximum password age
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+Minimum password length
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+b) Menú 
+\begin_inset Quotes eld
+\end_inset
+
+File
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subparagraph
+No les debe aparecer el menú “archivo” del “Explorador de Windows”
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La política de que no aparezca el menú "File" en el explorador de Windows
+ se puede localizar siguiendo: User Configuration
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Administrative Templates
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Windows Components
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Windows Explorer
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Remove File menu from Windows Explorer
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Enabled.
+\end_layout
+
+\begin_layout Subsection*
+c) Usuarios de 
+\shape italic
+Contabilidad
+\end_layout
+
+\begin_layout Standard
+Los usuarios del Departamento de 
+\shape italic
+Contabilidad
+\shape default
+, excepto aquel designado para el control de los usuarios y grupos han de
+ cumplir las siguientes restricciones:
+\end_layout
+
+\begin_layout Subparagraph
+Han de mapear en la unidad T el sistema de archivos distribuido
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se crea el script 
+\begin_inset Quotes eld
+\end_inset
+
+monta_T.bat
+\begin_inset Quotes erd
+\end_inset
+
+ en C:
+\backslash
+WINDOWS
+\backslash
+SYSVOL
+\backslash
+sysvol
+\backslash
+aso11.org
+\backslash
+scripts que se enacarga de montar la carpeta compartida 
+\backslash
+
+\backslash
+ORD11
+\backslash
+rootdfs en la unidad T:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	@echo off
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	net use t: 
+\backslash
+
+\backslash
+ORD11
+\backslash
+rootdfs
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Posteriormente, se define la GPO 
+\begin_inset Quotes eld
+\end_inset
+
+Mapear unidad T en el DFS
+\begin_inset Quotes erd
+\end_inset
+
+ siguiendo la ruta: User Configuration
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Windows Settings
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Scripts (LogOn/LogOff)
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Logon
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ en Script Name añadir el script anterior (
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+
+\backslash
+aso11.org
+\backslash
+SysVol
+\backslash
+aso11.org
+\backslash
+scripts
+\backslash
+monta_T.bat
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subparagraph*
+Ocultar las unidades A, B y C en “Mi PC”.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En este caso, es necesario crear otra GPO sobre 
+\shape italic
+Contabilidad
+\shape default
+, y definirla siguiendo la ruta: User Configuration
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Administrative Templates
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Windows Components
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Windows Explorer
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Hide these specified drives in My Computer
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Enabled
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+En la lista seleccionar "Restrict A, B and C drives only".
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Ademas se debe especificar que las GPO a nivel de contabilidad queden excluidas
+ y no se apliquen al usuario que administra esta OU.
+ Esto se realiza haciendo click derecho en la OU
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Properties
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Group Policy 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+click sobre cada una de las GPO
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Properties 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Pestaña Security
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Añadir al usuario delegado
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Pinchar sobre el y marcar la casilla "Deny" en "Apply Group Policy".
+\end_layout
+
+\begin_layout Enumerate
+Solo falta asignar privilegios control delegado sobre 
+\shape italic
+Contabilidad
+\shape default
+, para ello, se hace click derecho sobre la OU
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ "Delegate control"
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Delegate the following common task
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ hacer click en 
+\begin_inset Quotes eld
+\end_inset
+
+Create, delete and manage user accounts
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Create, delete and manage groups
+\begin_inset Quotes erd
+\end_inset
+
+ y 
+\begin_inset Quotes eld
+\end_inset
+
+Manage Group Policy links
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Así se pretende asignar a un usuario de esa subdivision la gestion de los
+ usuarios pertenecientes a la misma.
+ También es posible realizarlo a traves de: click derecho en 
+\shape italic
+Contabilidad
+\shape default
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Pestaña "Managed By".
+ O incluso, sobre cada GPO de la OU
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Click derecho
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Pestaña Security
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Agregar al usuario 
+\begin_inset Quotes eld
+\end_inset
+
+jefe
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Establecer permisos pertinentes.
+\end_layout
+
+\begin_layout Subsection*
+d) Usuarios del departamento de 
+\shape italic
+RRHH
+\end_layout
+
+\begin_layout Subparagraph*
+No les ha de aparecer la opción “Ejecutar” en el “Menú de Inicio”
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para quitar el botón "Ejecutar" del menu Inicio a los usuarios de 
+\shape italic
+Recursos Humanos
+\shape default
+ se configura una GPO accediendo por: User Configuration
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Administrative Templates
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Start Menu and Task Bar
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Remove Run Menu from Start Menu
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+hacer click en Enabled.
+\end_layout
+
+\begin_layout Subsection*
+e) Usuarios del departamento de 
+\shape italic
+Comercial
+\end_layout
+
+\begin_layout Subparagraph*
+El tamaño del perfil no ha de superar los 10 MB
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para limitar el tamaño del perfil editamos la siguiente GPO: User Configuration
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Administrative Templates
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+System
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+User profiles
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Limit profile size
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Enabled y establecer "Max profile size" a 10240 KB.
+\end_layout
+
+\begin_layout Subparagraph*
+Además, un usuario del departamento de 
+\shape italic
+RRHH
+\shape default
+ ha sido designado como administrador de directivas de grupos para su departamen
+to, de tal manera que ha de tener la capacidad de modificar las directivas
+ aplicadas al mismo
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para delegar el control de directivas de grupo a un usuario de 
+\shape italic
+RRHH
+\shape default
+, se realizan los mismos pasos que al delegar el control del departamento
+ 
+\shape italic
+Contabilidad
+\shape default
+ pero se chequea solo la opción de gestionar vínculos de políticas de grupo.
+\end_layout
+
+\begin_layout Part
+Opcional
+\end_layout
+
+\begin_layout Subsection*
+a) Cuotas
+\end_layout
+
+\begin_layout Standard
+Es posible aplicar una GPO para el control de las cuotas de las cuentas
+ de usuario siguiendo la siguiente ruta en el editor de GPOs: Computer Configura
+tion
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Administrative Templates
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+System
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Disk Quotas
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Enable disk quotas
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Enabled y 
+\begin_inset Quotes eld
+\end_inset
+
+Default quota limit and warning level
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+100MB.
+\end_layout
+
+\end_body
+\end_document
