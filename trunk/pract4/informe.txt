@@ -23,7 +23,7 @@ Empleados y Ejecutivos respectivamente
 
     - Se crean 3 unidades organizativas, una para cada departamento: Contabilidad, RRHH y Comercial. A su vez, Contabilidad se compone de otras 2 unidades organizativas: Compras y Ventas.
 
-    - En la OU de Contabilidad, click derecho -> "Delegate control" para asignar a un usuario de esa subdivision la gestion de los usuarios pertenecientes a la misma (Tambien es posible realizarlo de otra manera, a traves de click derecho en Contabilidad -> Pestaña "Managed By")
+    - En la OU de Contabilidad, click derecho -> "Delegate control" (ver administrar vínculos) para asignar a un usuario de esa subdivision la gestion de los usuarios pertenecientes a la misma (Tambien es posible realizarlo de otra manera, a traves de click derecho en Contabilidad -> Pestaña "Managed By"). Sobre la GPO -> Click derecho -> Pestaña Security -> Agragar al usuario jefe -> Establecer permisos.
 
     - Se crean las carpetas compartidas C:\rootdfs, C:\temp\unidad1, C:\foo\unidad2 para simular el DFS
 
@@ -52,7 +52,7 @@ de los usuarios y grupos han de cumplir las siguientes restricciones:
 
    - Para las GPO de Contabilidad (se aplican sobre esta OU):
    - Se crea un script en SYSVOL que monta la unidad \\ORD11\rootdfs en T: (para asignar a una GPO)
-   - Mapear unidad T en el DFS: User Configuration -> Windows Settings -> Scripts (LogOn/LogOff) -> Logon -> Añadir el script en SYSVOL que monta T:
+   - Edit GPO -> Mapear unidad T en el DFS: User Configuration -> Windows Settings -> Scripts (LogOn/LogOff) -> Logon -> Añadir el script en SYSVOL que monta T:
 
      *   Ocultar las unidades A, B y C en “Mi PC”.
 
