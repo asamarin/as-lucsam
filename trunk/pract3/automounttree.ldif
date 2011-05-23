@@ -8,10 +8,10 @@ cn: /import/casa
 objectClass: automount
 automountInformation: ldap 192.168.0.20:ou=auto.home,dc=aso11,dc=org
 
-#dn: ou=auto.home,dc=aso11,dc=org
-#ou: auto.home
-#objectClass: top
-#objectClass: automountMap
+dn: ou=auto.home,dc=aso11,dc=org
+ou: auto.home
+objectClass: top
+objectClass: automountMap
 
 dn: cn=irene,ou=auto.home,dc=aso11,dc=org
 cn: irene
