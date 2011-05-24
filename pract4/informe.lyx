@@ -181,12 +181,12 @@ unidad2 para simular el DFS.
 \end_layout
 
 \begin_layout Enumerate
-A continuación, en Administrative Tools
+A continuación, en Administrative Tools 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Distributed File System, se configura la carpeta raiz del DFS, en este caso
- 
+ Distributed File System, se configura la carpeta raiz del DFS, en este
+ caso 
 \backslash
 
 \backslash
@@ -230,27 +230,27 @@ Default Domain Policies
 \begin_inset Quotes erd
 \end_inset
 
- y siguiendo la ruta: Computer config
+ y siguiendo la ruta: Computer config 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Windows Settings
+ Windows Settings 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Security Settings
+ Security Settings 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Account Policies
+ Account Policies 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Password Policy
+ Password Policy 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-modificando las claves 
+ modificando las claves 
 \begin_inset Quotes eld
 \end_inset
 
@@ -291,23 +291,23 @@ No les debe aparecer el menú “archivo” del “Explorador de Windows”
 
 \begin_layout Standard
 La política de que no aparezca el menú "File" en el explorador de Windows
- se puede localizar siguiendo: User Configuration
+ se puede localizar siguiendo: User Configuration 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Administrative Templates
+ Administrative Templates 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Windows Components
+ Windows Components 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Windows Explorer
+ Windows Explorer 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Remove File menu from Windows Explorer
+ Remove File menu from Windows Explorer 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -356,7 +356,7 @@ sysvol
 \backslash
 aso11.org
 \backslash
-scripts que se enacarga de montar la carpeta compartida 
+scripts que se encarga de montar la carpeta compartida 
 \backslash
 
 \backslash
@@ -417,47 +417,27 @@ Mapear unidad T en el DFS
 \begin_inset Quotes erd
 \end_inset
 
- siguiendo la ruta: User Configuration
+ siguiendo la ruta: User Configuration 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Windows Settings
+ Windows Settings 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Scripts (LogOn/LogOff)
+ Scripts (LogOn/LogOff) 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Logon
+ Logon 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
- en Script Name añadir el script anterior (
-\begin_inset Quotes eld
-\end_inset
-
-
-\backslash
-
-\backslash
-aso11.org
-\backslash
-SysVol
-\backslash
-aso11.org
-\backslash
-scripts
-\backslash
-monta_T.bat
-\begin_inset Quotes erd
-\end_inset
-
-).
+ en Script Name añadir la ruta del script anterior.
 \end_layout
 
 \begin_layout Subparagraph*
-Ocultar las unidades A, B y C en “Mi PC”.
+Ocultar las unidades A, B y C en “Mi PC”
 \begin_inset Newline newline
 \end_inset
 
@@ -469,31 +449,31 @@ En este caso, es necesario crear otra GPO sobre
 \shape italic
 Contabilidad
 \shape default
-, y definirla siguiendo la ruta: User Configuration
+, y definirla siguiendo la ruta: User Configuration 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Administrative Templates
+ Administrative Templates 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Windows Components
+ Windows Components 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Windows Explorer
+ Windows Explorer 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Hide these specified drives in My Computer
+ Hide these specified drives in My Computer 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Enabled
+ Enabled 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-En la lista seleccionar "Restrict A, B and C drives only".
+ En la lista seleccionar "Restrict A, B and C drives only".
 \begin_inset Newline newline
 \end_inset
 
@@ -501,53 +481,53 @@ En la lista seleccionar "Restrict A, B and C drives only".
 \end_layout
 
 \begin_layout Enumerate
-Ademas se debe especificar que las GPO a nivel de contabilidad queden excluidas
+Además se debe especificar que las GPO a nivel de contabilidad queden excluídas
  y no se apliquen al usuario que administra esta OU.
- Esto se realiza haciendo click derecho en la OU
+ Esto se realiza haciendo click derecho en la OU 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Properties
+ Properties 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Group Policy 
+ Group Policy 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-click sobre cada una de las GPO
+ click sobre cada una de las GPO 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Properties 
+ Properties 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Pestaña Security
+ Pestaña Security 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Añadir al usuario delegado
+ Añadir al usuario delegado 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Pinchar sobre el y marcar la casilla "Deny" en "Apply Group Policy".
+ Pinchar sobre él y marcar la casilla "Deny" en "Apply Group Policy".
 \end_layout
 
 \begin_layout Enumerate
-Solo falta asignar privilegios control delegado sobre 
+Solo falta asignar privilegios de delegación de control sobre 
 \shape italic
 Contabilidad
 \shape default
-, para ello, se hace click derecho sobre la OU
+; para ello, se hace click derecho sobre la OU 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
- "Delegate control"
+ "Delegate control" 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
- Delegate the following common task
+ Delegate the following common task 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -576,9 +556,9 @@ Manage Group Policy links
 \end_inset
 
 .
- Así se pretende asignar a un usuario de esa subdivision la gestion de los
+ Así se pretende asignar a un usuario de esa subdivisión la gestión de los
  usuarios pertenecientes a la misma.
- También es posible realizarlo a traves de: click derecho en 
+ También es posible realizarlo a través de: click derecho en 
 \shape italic
 Contabilidad
 \shape default
@@ -587,19 +567,19 @@ Contabilidad
 \end_inset
 
  Pestaña "Managed By".
- O incluso, sobre cada GPO de la OU
+ O incluso, sobre cada GPO de la OU 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Click derecho
+ Click derecho 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Pestaña Security
+ Pestaña Security 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Agregar al usuario 
+ Agregar al usuario 
 \begin_inset Quotes eld
 \end_inset
 
@@ -607,7 +587,7 @@ jefe
 \begin_inset Quotes erd
 \end_inset
 
-
+ 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -629,27 +609,27 @@ No les ha de aparecer la opción “Ejecutar” en el “Menú de Inicio”
 \end_layout
 
 \begin_layout Standard
-Para quitar el botón "Ejecutar" del menu Inicio a los usuarios de 
+Para quitar el botón "Ejecutar" del menú Inicio a los usuarios de 
 \shape italic
 Recursos Humanos
 \shape default
- se configura una GPO accediendo por: User Configuration
+ se configura una GPO accediendo por: User Configuration 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Administrative Templates
+ Administrative Templates 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Start Menu and Task Bar
+ Start Menu and Task Bar 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Remove Run Menu from Start Menu
+ Remove Run Menu from Start Menu 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-hacer click en Enabled.
+ hacer click en Enabled.
 \end_layout
 
 \begin_layout Subsection*
@@ -668,26 +648,27 @@ El tamaño del perfil no ha de superar los 10 MB
 
 \begin_layout Standard
 Para limitar el tamaño del perfil editamos la siguiente GPO: User Configuration
+ 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
- Administrative Templates
+ Administrative Templates 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-System
+ System 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-User profiles
+ User profiles 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Limit profile size
+ Limit profile size 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Enabled y establecer "Max profile size" a 10240 KB.
+ Enabled y establecer "Max profile size" a 10240 KB.
 \end_layout
 
 \begin_layout Subparagraph*
@@ -728,27 +709,27 @@ a) Cuotas
 \begin_layout Standard
 Es posible aplicar una GPO para el control de las cuotas de las cuentas
  de usuario siguiendo la siguiente ruta en el editor de GPOs: Computer Configura
-tion
+tion 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Administrative Templates
+ Administrative Templates 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-System
+ System 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Disk Quotas
+ Disk Quotas 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
- Enable disk quotas
+ Enable disk quotas 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-Enabled y 
+ Enabled y 
 \begin_inset Quotes eld
 \end_inset
 
@@ -756,11 +737,11 @@ Default quota limit and warning level
 \begin_inset Quotes erd
 \end_inset
 
-
+ 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
-100MB.
+ 100MB.
 \end_layout
 
 \end_body
