@@ -411,10 +411,30 @@ end{lstlisting}
 La base del directorio LDAP está compuesta por la especificación del dominio
  en la raíz y por dos unidades organizativas, People y Group, para agrupar
  a los usuarios y a los grupos respectivamente.
- Para añadirlos, se ha partido de los ficheros LDIF generados con las migration_
-tools a partir de un subconjunto de 
+ Para añadirlos, se han creado inicialmente, y de manera local, a los citados
+ usuarios y grupos que residirán finalmente en el directorio LDAP.
+ De esta forma se pueden asignan los permisos adecuados a las directorios
+ de conexión correspondientes, directorios de los proyectos, etc...
+ que serán exportados posteriormente (Ver script anexo 
 \emph on
-/etc/passwd 
+
+\begin_inset Quotes eld
+\end_inset
+
+crear_usuarios_server.sh
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+).
+ A continuación se ha hecho uso de los ficheros LDIF generados con las 
+\emph on
+migration_tools
+\emph default
+ a partir de un subconjunto de los ficheros
+\emph on
+ /etc/passwd 
 \emph default
 y 
 \emph on
@@ -446,8 +466,320 @@ begin{lstlisting}
 
 \begin_layout Plain Layout
 
-	ldapmodify -x -D cn=Manager,dc=aso11,dc=org -H ldap://localhost -W -f <fichero
- LDIF>
+    ldapmodify -x -D cn=Manager,dc=aso11,dc=org -H ldap://localhost 
+\end_layout
+
+\begin_layout Plain Layout
+
+               -W -f <fichero LDIF>
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En este punto ya es posible eliminar de manera local a los usuarios y grupos
+ creados anteriormente, ya que han servido principalmente para exportar
+ sus configuraciones al LDAP de manera sencilla gracias a las 
+\emph on
+migration_tools
+\emph default
+, y ahora es redundante mantener la misma información en dos lugares distintos.
+ Por último, pero no por ello menos importante, se debe detener el servicio
+ 
+\emph on
+iptables
+\emph default
+ que gestiona el firewall de Linux, para que no bloquee las conexiones entrantes
+ que le llegarán desde el cliente (Si bien esta no es la mejor opción, ya
+ que se compromete la seguridad de todo el sistema al desactivar por completo
+ el firewall; lo ideal sería añadir una regla explícita para permitir los
+ accesos confiables).
+\end_layout
+
+\begin_layout Subsubsection*
+Cliente
+\end_layout
+
+\begin_layout Standard
+Para que el cliente sea capaz de loguearse contra el servidor LDAP que acabamos
+ de configurar en lugar de contra su configuración almacenada localmente,
+ es necesario llevar a cabo algunos pasos previos, a saber:
+\end_layout
+
+\begin_layout Standard
+Se instalan, antes que nada, los siguientes paquetes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+	yum install pam_ldap nss_ldap authconfig
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Seguidamente se invoca al asistente 
+\emph on
+authconfig-tui
+\emph default
+ (si bien el propio manual del mismo advierte de que su uso está desaconsejado
+ en favor de la herramienta análoga por línea de comandos 
+\emph on
+authconfig
+\emph default
+); en él, se marcarán las opciones listadas a continuación:
+\end_layout
+
+\begin_layout Itemize
+Utilizar LDAP
+\end_layout
+
+\begin_layout Itemize
+Utilizar contraseñas ocultas
+\end_layout
+
+\begin_layout Itemize
+Utilizar autenticación LDAP
+\end_layout
+
+\begin_layout Standard
+La pantalla siguiente del asistente requiere especificar cuál es la IP del
+ servidor LDAP contra el que se quieren realizar las autenticaciones, así
+ como el DN de base del directorio.
+ Se completan estos datos de esta manera:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+    Servidor:  ldap://192.168.0.20
+\end_layout
+
+\begin_layout Plain Layout
+
+    DN Base:   dc=aso11,dc=org
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Una vez finalizada la configuración a través del asistente, no está de más
+ comprobar que efectivamente en el fichero 
+\emph on
+/etc/nsswitch.conf
+\emph default
+ (entre otros, pero éste especialmente) se han reflejado los cambios indicados,
+ de forma que el orden de prioridad del cliente a la hora de comprobar las
+ credenciales del usuario cuando se loguea sea primero a través del servidor
+ LDAP y segundo, en el caso de que éste fallara o no se pudiera establecer
+ la conexión por algún motivo, los ficheros locales (
+\emph on
+/etc/passwd, /etc/group
+\emph default
+...).
+\end_layout
+
+\begin_layout Part
+NFS
+\end_layout
+
+\begin_layout Subsubsection*
+Servidor
+\end_layout
+
+\begin_layout Standard
+Una vez que han sido creados los directorios que serán exportados a los
+ clientes (ya mencionados anteriormente: proyectos, directorios de conexión
+ y común) y asignados los permisos pertinentes, se debe ahora configurar
+ el servicio NFS para compartir eficazmente esta infraestructura de directorios
+ con los clientes.
+ En cuanto al servidor, es necesario tener corriendo los servicios 
+\emph on
+nfsd 
+\emph default
+y
+\emph on
+ mountd, 
+\emph default
+así como el servicio auxiliar 
+\emph on
+portmapper, 
+\emph default
+por lo que se levantan (en caso de que no estuvieran presentes alguno o
+ la totalidad de ellos, se instalarían utilizando el gestor de paquetes
+ 
+\emph on
+yum
+\emph default
+ de forma análoga a como se ha utilizado con anterioridad en el informe):
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+    service mount start
+\end_layout
+
+\begin_layout Plain Layout
+
+    service nfs start
+\end_layout
+
+\begin_layout Plain Layout
+
+    service portmapper start
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A continuación, se configura el fichero 
+\emph on
+/etc/exports 
+\emph default
+para que cada usuario de la red interna acceda a su directorio de conexión
+ alojado en el directorio 
+\emph on
+/export/casa/
+\emph default
+ del servidor, que todos los usuarios de la red interna puedan acceder a
+ los directorios de proyectos, y que cualquiera pueda acceder al directorio
+ común (con permisos de red de sólo lectura, y convirtiéndose en accesos
+ anónimos):
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+    /export/casa         192.168.0.*(rw)
+\end_layout
+
+\begin_layout Plain Layout
+
+    /export/proyectos    192.168.0.*(rw)
+\end_layout
+
+\begin_layout Plain Layout
+
+    /export/comun        *(ro,all_squash)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Tras este paso, se reflejan en el sistema los cambios realizados con una
+ llamada al comando 
+\emph on
+exportfs
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+    exportfs -ra
 \end_layout
 
 \begin_layout Plain Layout
@@ -464,6 +796,236 @@ end{lstlisting}
 
 \begin_layout Subsubsection*
 Cliente
+\end_layout
+
+\begin_layout Standard
+En el cliente apenas se necesitan ejecutar acciones para incorporar los
+ beneficios que NFS aporta, toda vez que se encuentre instalado el paquete
+ 
+\emph on
+nfs-util
+\emph default
+ (en caso contrario, instalarlo primero) para que el comando 
+\emph on
+mount 
+\emph default
+reconozca este tipo de sistema de ficheros.
+ Ya comprobado esto, sólo resta crear el/los punto/s de montaje necesarios
+ y comprobar que funciona la configuración propuesta del NFS, mediante un
+ montaje manual:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+    mkdir /import/proyectos
+\end_layout
+
+\begin_layout Plain Layout
+
+    mount -t nfs 192.168.0.20:/export/proyectos /import/proyectos
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+AutoFS
+\end_layout
+
+\begin_layout Standard
+La última parte de la práctica consiste en conseguir que este sistema de
+ NFS que se ha configurado anteriormente funcione de manera automática y
+ bajo demanda de los clientes.
+ AutoFS nos proporciona una manera sencilla de lograr este objetivo, aunque
+ se pueden considerar dos opciones para configurarlo: de la manera 
+\begin_inset Quotes eld
+\end_inset
+
+tradicional
+\begin_inset Quotes erd
+\end_inset
+
+ utilizando sus ficheros de configuración 
+\emph on
+/etc/auto.master
+\emph default
+, 
+\emph on
+/etc/auto.home
+\emph default
+, etc...
+ en el lado del cliente o bien, aprovechando el directorio LDAP que ya está
+ funcionando en el servidor, establecer esta misma configuración mediante
+ entradas LDIF en la BDB del OpenLDAP.
+\end_layout
+
+\begin_layout Subsubsection*
+Servidor
+\end_layout
+
+\begin_layout Standard
+En el caso de decidir implementar AutoFS en la infraestructura LDAP ya creada,
+ se debe primero modificar el esquema para incluir algunas clases nuevas
+ que utilizará internamente AutoFS para especificar sus puntos de escucha,
+ claves, etc...
+ Tras ello, se puede comenzar a insertar entradas LDIF en 4 nuevas unidades
+ organizativas: 
+\emph on
+auto.master
+\emph default
+ (donde se especificarán su vez todos los puntos de escucha), 
+\emph on
+auto.home
+\emph default
+ (para la ruta del servidor y las opciones de montaje de los directorios
+ de conexión de los usuarios), 
+\emph on
+auto.proyectos 
+\emph default
+(ídem para los proyectos) y 
+\emph on
+auto.shared
+\emph default
+ (ídem para el directorio común).
+ Las entradas LDIF concretas se encuentran en el anexo de este documento.
+\end_layout
+
+\begin_layout Subsubsection*
+Cliente
+\end_layout
+
+\begin_layout Standard
+En caso de decidirse por la opción más habitual de configuración a través
+ de los ficheros locales, se han de modificar los ficheros equivalentes
+ a las entradas LDIF mencionadas previamente, es decir, 
+\emph on
+/etc/auto.master
+\emph default
+, 
+\emph on
+/etc/auto.home
+\emph default
+, 
+\emph on
+/etc/auto.proyectos
+\emph default
+ y 
+\emph on
+/etc/auto.shared
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
+\end_layout
+
+\begin_layout Plain Layout
+
+    /import/casa        /etc/auto.home
+\end_layout
+
+\begin_layout Plain Layout
+
+    /import/proyectos   /etc/auto.proyectos
+\end_layout
+
+\begin_layout Plain Layout
+
+    /import/shared      /etc/auto.shared
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+home
+\end_layout
+
+\begin_layout Plain Layout
+
+	*      -fstype=nfs,rw,hard,intr,vers=3     192.168.0.20:/export/casa/&
+\end_layout
+
+\begin_layout Plain Layout
+
+proy
+\end_layout
+
+\begin_layout Plain Layout
+
+	*      -fstype=nfs,rw,hard,intr,vers=3     192.168.0.20:/export/proyectos/&
+\end_layout
+
+\begin_layout Plain Layout
+
+shared
+\end_layout
+
+\begin_layout Plain Layout
+
+	comun  -fstype=nfs,ro,hard,intr,vers=3     192.168.0.20:/export/shared/
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+nsswitch.conf
+\end_layout
+
+\begin_layout Plain Layout
+
+	automount: files ldap
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se arranca servicio 
+\emph on
+autofs 
+\emph default
+y listo
 \end_layout
 
 \end_body
