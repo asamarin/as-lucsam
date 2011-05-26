@@ -695,7 +695,9 @@ RRHH
 \shape italic
 Contabilidad
 \shape default
- pero se chequea solo la opción de gestionar vínculos de políticas de grupo.
+, pero en este caso se chequean además los permisos de lectura y escritura 
+ de políticas de grupo, para que este usuario privilegiado pueda modificar las
+ GPO's.
 \end_layout
 
 \begin_layout Part
