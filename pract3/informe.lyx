@@ -932,6 +932,13 @@ En caso de decidirse por la opción más habitual de configuración a través
  y 
 \emph on
 /etc/auto.shared
+\emph default
+:
+\end_layout
+
+\begin_layout Description
+/etc/auto.master Hay que añadir las siguientes líneas (y comentar las que
+ pudieran estar activas con anterioridad):
 \end_layout
 
 \begin_layout Standard
@@ -962,45 +969,153 @@ begin{lstlisting}
 
 \begin_layout Plain Layout
 
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Esto significa que para cada punto de escucha especificado (/import/casa,
+ etc...) se debe hacer uso de la configuración residente en el fichero especificado
+ en la segunda columna.
+\end_layout
+
+\begin_layout Description
+/etc/auto.home Añadir la siguiente línea:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
 \end_layout
 
 \begin_layout Plain Layout
 
-home
+*  -fstype=nfs,rw,hard,intr,vers=3  192.168.0.20:/export/casa/&
 \end_layout
 
 \begin_layout Plain Layout
 
-	*      -fstype=nfs,rw,hard,intr,vers=3     192.168.0.20:/export/casa/&
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+/etc/auto.proyectos Añadir la siguiente línea:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
 \end_layout
 
 \begin_layout Plain Layout
 
-proy
+*  -fstype=nfs,rw,hard,intr,vers=3  192.168.0.20:/export/proyectos/&
 \end_layout
 
 \begin_layout Plain Layout
 
-	*      -fstype=nfs,rw,hard,intr,vers=3     192.168.0.20:/export/proyectos/&
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+/etc/auto.shared Añadir la siguiente línea:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}
 \end_layout
 
 \begin_layout Plain Layout
 
-shared
+comun  -fstype=nfs,ro,hard,intr,vers=3  192.168.0.20:/export/shared/
 \end_layout
 
 \begin_layout Plain Layout
 
-	comun  -fstype=nfs,ro,hard,intr,vers=3     192.168.0.20:/export/shared/
+
+\backslash
+end{lstlisting}
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En este caso, se indica que la clave dentro del punto de escucha 
+\emph on
+/import/shared 
+\emph default
+será un único directorio denominado 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+común
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+.
+\end_layout
+
+\begin_layout Description
+/etc/nsswitch.conf Por último, es necesario comprobar una entrada en este
+ fichero para asegurarse de que el servicio de automontaje buscará la configurac
+ión requerida en los ficheros locales, y no en el directorio LDAP por ejemplo:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
 
 \begin_layout Plain Layout
 
-\end_layout
 
-\begin_layout Plain Layout
-
-nsswitch.conf
+\backslash
+begin{lstlisting}
 \end_layout
 
 \begin_layout Plain Layout
@@ -1021,11 +1136,137 @@ end{lstlisting}
 \end_layout
 
 \begin_layout Standard
-Se arranca servicio 
+De este modo, se asegura que la comprobación de los ficheros mencionados
+ anteriormente tendrá preferencia sobre otras posibles opciones.
+ Finalmente, se reinicia el servicio 
 \emph on
-autofs 
+autofs
 \emph default
-y listo
+ para actualizar toda esta configuración.
+\end_layout
+
+\begin_layout Part
+Scripts anexos
+\end_layout
+
+\begin_layout Description
+crear_directorios_server.sh Se ejecuta en el servidor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting{./crear_usuarios_server.sh}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+puntos_montaje.sh Se ejecuta en el cliente.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting{./puntos_montaje.sh}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+ous.ldif Se ejecuta en el servidor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting{./ous.ldif}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+users.ldif Se ejecuta en el servidor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting{./p3_passwds.ldif}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+groups.ldif Se ejecuta en el servidor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting{./p3_groups.ldif}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+automounttree.ldif Se ejecuta en el servidor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting{./automounttree.ldif}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
